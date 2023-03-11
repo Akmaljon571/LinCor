@@ -12,11 +12,6 @@ export class UpdateUserDto {
   last_name: string;
 
   @IsString()
-  @Length(0, 30)
-  @IsOptional()
-  area: string;
-
-  @IsString()
   @Length(0, 100)
   @IsOptional()
   email: string;

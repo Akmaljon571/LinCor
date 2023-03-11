@@ -30,13 +30,6 @@ export class UserEntity extends BaseEntity {
 
   @Column({
     type: 'character varying',
-    length: 30,
-    nullable: false,
-  })
-  area: string;
-
-  @Column({
-    type: 'character varying',
     length: 100,
     nullable: false,
   })

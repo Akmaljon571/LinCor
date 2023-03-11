@@ -25,17 +25,6 @@ export class RegistrUserDto {
   last_name: string;
 
   @IsString()
-  @Length(0, 30)
-  @IsNotEmpty()
-  @ApiProperty({
-    name: 'area',
-    type: 'string',
-    default: 'Toshkent',
-    required: true,
-  })
-  area: string;
-
-  @IsString()
   @IsNotEmpty()
   @ApiProperty({
     name: 'password',

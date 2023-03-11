@@ -1,8 +1,8 @@
-import { ParolEmailUserDto } from './dto/parol_email';
 import * as bcrypt from 'bcrypt';
 import Redis from 'ioredis';
 import senMail from 'src/utils/node_mailer';
 import jwt from 'src/utils/jwt';
+import { ParolEmailUserDto } from './dto/parol_email';
 import { LoginUserDto } from './dto/login';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { RegistrUserDto } from './dto/registr';
@@ -13,7 +13,6 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ParolUserDto } from './dto/parol';
 import { PatchUserDto } from './dto/patch.all';
 import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
-// import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
 
 @Injectable()
 export class UsersService {
@@ -39,7 +38,6 @@ export class UsersService {
 
     const newObj = {
       email: body.email,
-      area: body.area,
       first_name: body.first_name,
       last_name: body.last_name,
       password: await bcrypt.hash(body.password, solt),
@@ -102,7 +100,6 @@ export class UsersService {
       .insert()
       .into(UserEntity)
       .values({
-        area: redis.area,
         email: redis.email,
         first_name: redis.first_name,
         last_name: redis.last_name,
@@ -279,7 +276,6 @@ export class UsersService {
     await UserEntity.createQueryBuilder()
       .update()
       .set({
-        area: body.area || findUser.area,
         first_name: body.first_name || findUser.first_name,
         last_name: body.last_name || findUser.last_name,
         password: body.password || findUser.password,
