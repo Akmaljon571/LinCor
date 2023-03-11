@@ -14,11 +14,10 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
   console.log('ishladi');
   const config = app.get(ConfigService);
-  const host = config.getOrThrow('app.host');
   const port = config.getOrThrow('app.port');
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(port, host);
+  await app.listen(port);
 }
 bootstrap();
