@@ -1,0 +1,19 @@
+{ workbook 2 xil boladi ochiq va yopiq bu yopiq workbook uchun }
+
+GET
+    asosan admin uchun hamma workbooklarni course boyicha chiqarib berasiz
+
+POST
+    Admin qoshadi
+
+PUT 
+    Admin ozgartiradi
+
+DELETE
+    Admin ochiradi
+
+👇
+    GET: admin, yesToken
+    POST: admin, yesToken
+    PUT: admin, yesToken
+    DELETE: admin, yesToken

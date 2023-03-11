@@ -1,0 +1,77 @@
+CREATE TABLE users( .
+    user_id uuid PRIMARY KEY,
+    first_name varchar(65) not null,
+    last_name varchar(65)                               # nullable true,
+    area varchar(30) not null                           # 12 ta viloyat va Qoraqalpogiston Res. jami 13 ta 
+    email varchar(100) unique not null                  # eng unique malumot id va email boladi.
+    image text default "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png" not null,
+    active boolean default true
+);
+
+CREATE TABLE courses( .
+    course_id uuid PRIMARY KEY,
+    course_title varchar(100) not null unique,
+    course_description text,
+    course_price varchar not null,
+    course_sequence int not null,                     # ketma ketligi uchun
+    course_img varchar not null
+)
+
+CREATE TABLE courses_open_users ( .
+    cou_id uuid PRIMARY KEY,
+    course_id uuid FOREIGN KEY,
+    user_id uuid FOREIGN KEY,
+    create_data time not null,
+)
+
+CREATE TABLE videos (
+    video_id uuid PRIMARY KEY,
+    video_title varchar(100) not null,
+    video_description varchar not null,
+    video_course uuid,
+    video_link text,
+    video_sequence int not null,
+    video_duration time not null
+)
+
+CREATE TABLE user_watch_video ( .
+    uwv_id uuid primary key,
+    user_id uuid not null,
+    video_id uuid not null
+)
+
+CREATE TABLE workbook ( .
+    workbook_id uuid PRIMARY KEY,
+    workbook_link text,
+    workbook_course uuid not null,
+    workbook_sequence int not null
+)
+
+CREATE TABLE user_take_workbook ( .
+    utw_id uuid PRIMARY KEY,
+    user_id uuid,
+    workbook_id uuid,
+    connection uuid,                                    # courses_open_users table ga qoshilayotganda shu qoshilgan id tekshiriladi on delete cascade qilinadi Course vaqti 6 oyda ochadi shunda bu table ichidagi malumotlari ham ochadi
+    utw_active boolean default true
+)
+
+CREATE TABLE workbook_open ( .
+    openbook_id uuid PRIMARY KEY,
+    openbook_link text not null,
+    openbook_course uuid not null,
+    openbook_sequence int not null
+)
+
+CREATE TABLE certificate ( .
+    certificate_id uuid PRIMARY KEY,
+    certificate_link text not null,
+    certificate_course uuid not null
+)
+
+CREATE TABLE certificate_open_user ( .
+    cou_id uuid PRIMARY KEY,
+    certificate_id uuid not null,
+    user_id not null,
+    connection uuid,                                    # courses_open_users table ga qoshilayotganda shu qoshilgan id tekshiriladi on delete cascade qilinadi Course vaqti 6 oyda ochadi shunda bu table ichidagi malumotlari ham ochadi
+    cou_active boolean default true
+)

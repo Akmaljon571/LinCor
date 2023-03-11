@@ -1,0 +1,65 @@
+REDIS bilan ishlash 
+👆 {
+    Redisga malumotlarni saqlaganda unique randomni son hisoblanadi shunchun redisga shu random son bilan saqlaysiz! 
+
+    const randomSon = randomFn()
+
+    await client.setEx(randomSon, , JSON.stringify(malumotObj))
+
+    shu holatda saqlanadi song emaildan keluvchi randomni son bilan client.get(emailSon) qilib koriladi agar chiqb kelmasa password hato yoki vaqt tugagan hisoblanadi. Agar redis ichidan chiqib kelinsa bazaga malumotlar yoziladi REDIS shunday ishlanadi. 
+}
+
+Registr
+    malumotlarni olgandan song malumotlarni redisga saqlab song emailga sorov jonatilishi kerak! FrontEnd ga hatolar bolsa 400 togri bolsa 200 chiqib kelishi kerak! PASSWORD bcrypt orqali kashlanadi shu yerda!!!
+
+Registr#Email
+    random sonni qabul qilb redisga sorov jonatilib shundan random son egasi bolsa token berishi aks holda 400 hato chiqib kelishi kerak!
+
+Login
+    email va password qabul qilib tekshiriladi. Hato chiqsa error, Togri chiqsa emailga password jonatilib email, parol va randomSoni yana redisga saqlanadi!!! 200
+
+Login#Email
+    random qabul qilinadi songra redis tekshiriladi bolmasa hato, Malumot chiqb kelsa token qaytariladi
+
+Password
+    email qabul qilinadi baza tekshirilgandan song emailga parol jonatiladi. Redisga random va email saqlanadi
+
+Password#Email 
+    random qabul qilinadi redis tekshiriladi hato chiqsa hatoligi togri chiqsa togriligi frontchiga qaytariladi. Va Redisga setEx emas set holatda random saqlanadi
+
+Password#NewPassword
+    yangi password va randomSon olingandan song redisdan random olinadi va shu Userni password hashlangan holatda update qilib qoyiladi. Song Reds.del(random) deb qoyiladi!
+
+GET 
+    token keladi ichidan id va email boladi shu ikkisi boyicha baza tekshiriladi song shu User malumotlari qaytariladi passworddan tashqari. va uning malumotlari ham chiqib keladi. relation { product: true }
+
+Update#image 
+    Figmada rasm ozgarishni bosilishi bilan shu routga faqat rasmni ozi kelishi kerak chunki biz ism familiya ichida rasmni ham ozgartirsak User ozgartirib jonatish degan tugmani bosmasligi mumkun!!! rasm uchun alohida rout chiqariladi 
+
+Update#all
+    ism familiya va boshqa malumotlari uchun alohida rout qilinadi
+
+Update#Password
+
+Update#Email❌
+    Figmada email ozgartirish degan joyi bor ekan. Qilinmaydi asosiy uniqu malumot email chunchun uni Backendda qilmaymiz!
+
+Delete#User
+    Userni ichida active boladi shuni false qilib qoyiladi 
+
+Admin#GET
+    Admin uchun userlar royxati chiqib kelishi kerak. Active va noActive holatda ajratib berish kerak. Qanday ajratish bu sizga bogliq
+
+Admin#Login
+    Admin login qilib kiradi. Buni keyinroq qilinadi huddi user ga oxshab login boladi
+
+👇
+{ hammasi User uchun admin uchun alohida login registr boladi }
+
+Login: User, noToken
+Registr: User, noToken
+Password: User, noToken
+GET: User, yesToken
+Update: User, yesToken
+Delete: User, yesToken
+Admin#GET: admin, yesToken

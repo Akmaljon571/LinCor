@@ -1,0 +1,24 @@
+{ Bu 2 chi workbook hamma uchun ochiq }
+
+GET#User
+    get zapros kelishi bilan 
+    fs.createWriteStream metodi yordamidami ( men bilgan yolim shu ) yoki boshqa yol tutib workbookni yuklab berasiz
+
+GET#admin
+    Hamma openWorkbooklarni kurs boyicha tartiblab chiqarib berasiz
+
+POST
+    Admin qoshadi 2 ta keladi undan oshishi mumkun emas
+
+PUT 
+    Admin ozgartiradi
+
+DELETE
+    Admin ochiradi
+
+👇
+    GET#user: user, yesToken
+    GET#admin: admin, yesToken
+    POST: admin, yesToken
+    PUT: admin, yesToken
+    DELETE: admin, yesToken

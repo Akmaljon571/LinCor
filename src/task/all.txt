@@ -1,0 +1,44 @@
+1_ kimga qaysi ish tushgan bolsa hamma ozini table ga javobgar boladi mobodo ishlamey qolsa ham u javobgar hisoblanadi. task yozib chiqdim qoldan kelgancha tushunarli boladi degan umidaman yana sorarsizlar {} ichida yozganim asosiy javobgarliklar yoki nmadur yengi malumot ❌ shunday qoyib ketganim figmada bor lekin biz uni qilishimiz hato shunchun buni qilmaymiz. Masalan Userning eng unique malumoti email hisoblanadi token ichiga email yashirganimizdan keyin uni ozgartirish juda hato lekin figmada ozgartirish imkoni bor. 👇 bunday stiker har bir task ostiga yozib qoydim bu Routlar uchun qaysi routga kimlar murojat qiladi token keladimi yoqmi hammasi tushuntrilgan. Misol => GET: user, yesToken. Bu asosan middleWarelarni ishlatish uchun kerak boladi. Shu boyicha siz routlar chiqarib berasiz
+
+2_ Token ichiga email va id yashiriladi
+
+3_ Redis faqat userni login uchun kerak
+
+4_ Javobgarlar:
+    Git Hub uchun: 
+        Jumaboyer Jasurbek
+
+    Kod birxili boyicha: 
+        Smailov Nodir, Mirxonjon akalar
+
+    User malumotlari: 
+        Abdujabbor_Sattarov
+
+    Securite: 
+        Gay Efrat
+
+    Database: 
+        Ahmadjonov Akmaljon
+
+    Google Cloud: 
+        Mirxonjon, Ogabek akalar
+
+5_ Bolar qaysidur ishni get qilsangiz unga tegishli hamma tablelarni 
+find(
+    relation: { 
+        join: true 
+    }
+)
+ shunday qilib hamma join bolgan tablelarni chiqarib ketilar faqat Course da videoni chiqarmiszlar holos. Chunki securite uchun
+
+6_ Sotib olish tizimi bolmaydi kurslarni admin telegramdan boladi bizga admin deshboardan user update bolgandaqa keladi biz uni olganimizdan keyin qiladigan ishimiz
+    1) courses_open_users table ga userni va sotib olingan course id larni qoshish.  
+    2) 6 oy time qoyib qoyish 6 oydan song avtamatik ochib ketishi kerak!
+    3) user_take_workbook table ga course ichidagi hamma workbooklarni id larini va user id larini qoshishimiz kerak 
+    Misol: 1 ta user course sotib olgandan song u kurs ichidagi workbooklari har bir video korib bolgandan song faqat 1 marta yuklab olsa boladi. yuklab olish bosilganda user id si va workbook id sini tekshiriladi default true ( yuklab olsa boladi ) turgan bolsa yuklab beradi va false qilib qoyadi keyingi marta shu table ichi tekshiriladi false ( yuklab olingan ) workbook linkini bermaydi
+    4) Sertifikat ham huddi shunday boladi 1 ta course uchun faqat 1 ta sertifikat beriladi. Course sotib olingandan song Certificate_open_user shu table ga sertifikat id va user idlari qoshiladi. Sertifikat olish bosilganda huddi workbokdaqa shartlar ila beriladi.
+
+7_ ❌ Videolarni faqat videolarga get zapros bolganda chiqsin boshqa payt 
+relation: { 
+    video: true 
+} qilib qoymanglar

@@ -1,0 +1,9 @@
+{ Bu user Kursni sotib olgan vaqti workbook table ichidagi sotib olingan workbooklar royxati turadi, POST osha kurs sotib olinayotgan vaqtida boladi, 6 oyda kurs ochsa bu tabledagi malumotlar ham ochib ketadi }
+
+GET
+    utw_active tekshiriladi oldin olganmi yoqmi olgan bolsa:
+    fs.createWriteStream metodi yordamidami ( men bilgan yolim shu ) yoki boshqa yol tutib workbookni yuklab berasiz va utw_active false qilib qoyasiz
+    yoq bolsa berolmiman deysiz
+
+👇
+GET: user, yesToken

@@ -1,0 +1,21 @@
+{
+    Course faqat 1 daraja, 2 daraja, 3 daraja, topik 1, topik 2, topik 3 boladi holos va shularni videolari boladi bold boshqa course bolmaydi.
+}
+
+GET 
+    courseAll chiqib keladi. Faqat unga tegishli produclarni chiqarmaysiz 
+
+POST
+    create qilinadi. Faqat admin
+
+PUT
+    update qilinadi. Faqat admin
+
+Delete 
+    delete qilinadi. Faqat admin
+
+👇 
+    GET: user, noToken
+    POST: admin, yesToken
+    PUT: admin, yesToken
+    DELETE: admin, yesToken

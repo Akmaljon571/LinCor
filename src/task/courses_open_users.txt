@@ -1,0 +1,18 @@
+{
+    bu kurs sotib olgan va sotib olmagan userlarni hisoblovchi asosiy table hisoblanadi. Shunchun bu table ga sal chuquroq qarashingizni iltimos qilardim. 
+    User telegramdan tolov qilgandan song admin dashboarddan userning id si keladi shunda bu table ishi boshlanadi
+}
+
+GET 
+    get asosan admin korishi mumkun. Admin uchun rout chiqarib bersez bold
+
+POST
+    post asosan admin qoshadi. sizga courseId va userId keladi siz u userId sini  shu table qoshishingiz, user_take_workbook bu tablega esa workbook table ichidagi shu kursga tegishli hamma workbooklarni shu table ga user id si bilan qoshib chiqishingiz kerak boladi. Shu kursga tegishli hamma workbooklar user_take_workbook shu tablega qoshilgandan song, certificate_open_user shu table ga shu kursga tegishli sertifikatni qoshishingiz kerak boladi bu 1 ta kursga tegishli 1 ta sertifikat shuni id sini shu userni qoshishingiz kerak boladi. 
+
+DELETE
+    delete qilish hech qanday admin tomonidan yoki userni ozi tomonidan qilinmaydi olingan sanadan 6 oy muddat otgandan song avtamatik tarizda ochishi kerak. Bu ishga esa siz javobgar bolasiz
+
+👇 
+GET: Admin yesToken
+POST: Admin yesToken
+DELETE: Avtamatik yesToken bunga rout chiqarishingiz shart emas algoritm yasab qoysez kifoya lekin bu algoritmga siz javob berasiz
