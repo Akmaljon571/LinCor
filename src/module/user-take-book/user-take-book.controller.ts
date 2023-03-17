@@ -16,7 +16,7 @@ export class UserTakeBookController {
   @Get('/get/:id')
   @HttpCode(HttpStatus.OK)
   @ApiHeader({
-    name: 'user_token',
+    name: 'bearer_token',
     description: 'User token',
     required: true,
   })

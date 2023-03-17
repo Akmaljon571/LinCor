@@ -35,6 +35,12 @@ export class CourseEntity extends BaseEntity {
   course_price: string;
 
   @Column({
+    type: 'character varying',
+    nullable: false,
+  })
+  course_link: string;
+
+  @Column({
     type: 'integer',
     nullable: false,
     unique: true,

@@ -86,7 +86,7 @@ export class VideoController {
   @ApiNotFoundResponse()
   @ApiCreatedResponse()
   @ApiHeader({
-    name: 'admin_token',
+    name: 'bearer_token',
     description: 'Admin token',
     required: true,
   })
@@ -108,9 +108,13 @@ export class VideoController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  @ApiHeader({ name: 'user_token', description: 'optional', required: false })
+  @ApiHeader({
+    name: 'bearer_token',
+    description: 'optional',
+    required: false,
+  })
   async findAll(@Param('id') course: string, @Headers() header: any) {
-    if (header?.user_token) {
+    if (header?.bearer_token) {
       const userId = await this.veridfyToken.verifyUser(header);
       if (userId) {
         return await this.videoService.findAll(course, userId);
@@ -124,9 +128,13 @@ export class VideoController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  @ApiHeader({ name: 'user_token', description: 'optional', required: false })
+  @ApiHeader({
+    name: 'bearer_token',
+    description: 'optional',
+    required: false,
+  })
   async findOne(@Param('id') id: string, @Headers() header: any) {
-    if (header?.user_token) {
+    if (header?.bearer_token) {
       const userId = await this.veridfyToken.verifyUser(header);
       if (userId) {
         return await this.videoService.findOne(id, userId);
@@ -175,7 +183,7 @@ export class VideoController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
-    name: 'admin_token',
+    name: 'bearer_token',
     description: 'Admin token',
     required: false,
   })
@@ -205,7 +213,7 @@ export class VideoController {
   @ApiNotFoundResponse()
   @ApiNoContentResponse()
   @ApiHeader({
-    name: 'admin_token',
+    name: 'bearer_token',
     description: 'Admin token',
     required: true,
   })

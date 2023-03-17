@@ -1,3 +1,4 @@
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   Controller,
   Get,
@@ -9,20 +10,26 @@ import {
   HttpCode,
   HttpStatus,
   Headers,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiHeader,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { TokenMiddleware } from 'src/middleware/middleware.service';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { googleCloud } from 'src/utils/google-cloud';
 
 @Controller('courses')
 @ApiTags('Course')
@@ -37,17 +44,52 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiCreatedResponse()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Attendance Punch In' })
   @ApiHeader({
-    name: 'admin_token',
+    name: 'bearer_token',
     description: 'Admin token',
     required: true,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['file', 'title', 'description', 'price', 'sequence'],
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        title: {
+          type: 'string',
+          default: '3-dars',
+        },
+        description: {
+          type: 'string',
+          default: 'Bugungi dars paloncha',
+        },
+        price: {
+          type: 'string',
+          default: '3 000 000',
+        },
+        sequence: {
+          type: 'number',
+          default: 4,
+        },
+      },
+    },
   })
   async create(
     @Body() createCourseDto: CreateCourseDto,
     @Headers() header: any,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     if (await this.veridfyToken.verifyAdmin(header)) {
-      await this.coursesService.create(createCourseDto);
+      const bool: any = googleCloud(file);
+      if (bool) {
+        await this.coursesService.create(createCourseDto, bool);
+      }
     }
   }
 
@@ -65,8 +107,43 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiNoContentResponse()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Attendance Punch In' })
   @ApiHeader({
-    name: 'admin_token',
+    name: 'bearer_token',
+    description: 'Admin token',
+    required: true,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        title: {
+          type: 'string',
+          default: '3-dars',
+        },
+        description: {
+          type: 'string',
+          default: 'Bugungi dars paloncha',
+        },
+        price: {
+          type: 'string',
+          default: '3 000 000',
+        },
+        sequence: {
+          type: 'number',
+          default: 4,
+        },
+      },
+    },
+  })
+  @ApiHeader({
+    name: 'bearer_token',
     description: 'Admin token',
     required: true,
   })
@@ -74,9 +151,13 @@ export class CoursesController {
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
     @Headers() headers: any,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     if (await this.veridfyToken.verifyAdmin(headers)) {
-      await this.coursesService.update(updateCourseDto, id);
+      const bool: any = googleCloud(file);
+      if (bool) {
+        await this.coursesService.update(updateCourseDto, id, bool);
+      }
     }
   }
 
@@ -86,7 +167,7 @@ export class CoursesController {
   @ApiNotFoundResponse()
   @ApiNoContentResponse()
   @ApiHeader({
-    name: 'admin_token',
+    name: 'bearer_token',
     description: 'Admin token',
     required: true,
   })

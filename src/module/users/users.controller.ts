@@ -17,6 +17,8 @@ import {
   Put,
   Patch,
   Delete,
+  Req,
+  Res,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -34,6 +36,8 @@ import { ParolUserDto } from './dto/parol';
 import { TokenMiddleware } from 'src/middleware/middleware.service';
 import { googleCloud } from 'src/utils/google-cloud';
 import { PatchUserDto } from './dto/patch.all';
+import { RegistrCreateDto } from './dto/registrCreate';
+import { Request, Response } from 'express';
 
 @Controller('users')
 @ApiTags('Users')
@@ -52,6 +56,33 @@ export class UsersController {
     return await this.usersService.registr(body);
   }
 
+  @Get('/registr/email/:code')
+  @ApiBadRequestResponse()
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @ApiUnprocessableEntityResponse()
+  @HttpCode(HttpStatus.OK)
+  async registrEmail(
+    @Param('code') param: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.usersService.registr_email(param, res);
+  }
+
+  @Post('/registr/create')
+  @ApiBadRequestResponse()
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @ApiUnprocessableEntityResponse()
+  @HttpCode(HttpStatus.OK)
+  async registrCreate(
+    @Req() request: Request,
+    @Body() body: RegistrCreateDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.usersService.registrCreate(request, body, res);
+  }
+
   @Post('/login')
   @ApiBadRequestResponse()
   @ApiOkResponse()
@@ -61,22 +92,12 @@ export class UsersController {
     return await this.usersService.login(body);
   }
 
-  @Get('/registr/email/:id')
-  @ApiBadRequestResponse()
-  @ApiOkResponse()
-  @ApiNotFoundResponse()
-  @ApiUnprocessableEntityResponse()
-  @HttpCode(HttpStatus.OK)
-  async registrEmail(@Param('id') param: string) {
-    return await this.usersService.registr_email(param);
-  }
-
-  @Get('/login/email/:id')
+  @Get('/login/email/:code')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async loginEmail(@Param('id') params: string) {
+  async loginEmail(@Param('code') params: string) {
     return await this.usersService.login_email(params);
   }
 
@@ -89,13 +110,13 @@ export class UsersController {
     return await this.usersService.parol(body);
   }
 
-  @Post('/parol/email/:id')
+  @Post('/parol/email/:code')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   async parolEmail(
-    @Param('id') param: string,
+    @Param('code') param: string,
     @Body() body: ParolEmailUserDto,
   ) {
     return await this.usersService.parol_email(param, body);
@@ -104,7 +125,7 @@ export class UsersController {
   @Get('/statistika')
   @ApiOkResponse()
   @ApiHeader({
-    name: 'admin_token',
+    name: 'bearer_token',
     description: 'Admin token',
     required: false,
   })
@@ -120,7 +141,7 @@ export class UsersController {
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   @ApiHeader({
-    name: 'user_token',
+    name: 'bearer_token',
     description: 'User token',
     required: false,
   })
@@ -150,7 +171,7 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
-    name: 'user_token',
+    name: 'bearer_token',
     description: 'User token',
     required: false,
   })
@@ -174,7 +195,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiHeader({
-    name: 'user_token',
+    name: 'bearer_token',
     description: 'User token',
     required: false,
   })
@@ -191,7 +212,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiHeader({
-    name: 'user_token',
+    name: 'bearer_token',
     description: 'User token',
     required: false,
   })

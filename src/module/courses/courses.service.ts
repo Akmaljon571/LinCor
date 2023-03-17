@@ -6,7 +6,7 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Injectable()
 export class CoursesService {
-  async create(body: CreateCourseDto) {
+  async create(body: CreateCourseDto, link: string) {
     await CourseEntity.createQueryBuilder()
       .insert()
       .into(CourseEntity)
@@ -15,6 +15,7 @@ export class CoursesService {
         course_price: body.price,
         course_title: body.title,
         course_sequence: body.sequence,
+        course_link: link,
       })
       .execute()
       .catch(() => {
@@ -32,7 +33,7 @@ export class CoursesService {
     });
   }
 
-  async update(body: UpdateCourseDto, id: string) {
+  async update(body: UpdateCourseDto, id: string, link: string) {
     const course = await CourseEntity.findOneBy({
       course_id: id,
     }).catch(() => {
@@ -49,6 +50,7 @@ export class CoursesService {
         course_price: body.price || course.course_price,
         course_title: body.title || course.course_title,
         course_sequence: body.sequence || course.course_sequence,
+        course_link: link || course.course_link,
       })
       .where({
         course_id: id,

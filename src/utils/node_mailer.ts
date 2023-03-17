@@ -1,18 +1,18 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import * as nodeMailr from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 
 const senMail = async (adres: string, content: string) => {
   try {
-    const transport = nodeMailr.createTransport({
+    const transport = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'karzinkawebsite@gmail.com',
-        pass: 'jxhpfbsrewpjkcri',
+        user: 'lincorteamnt@gmail.com',
+        pass: 'xbewqqnfarwklaaj',
       },
     });
 
     await transport.sendMail({
-      from: 'karzinkawebsite@gmail.com',
+      from: 'lincorteamnt@gmail.com',
       to: adres,
       subject: content,
       text: content,

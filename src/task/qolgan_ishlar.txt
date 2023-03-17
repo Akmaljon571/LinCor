@@ -1,14 +1,13 @@
-Shahboz akani email pochtalarini && tekshiruvi bilan tekshirib qoyish kerak ✅
-Verify Admin ham SHahboz akani email pochtalarini kiritib qoyish kerak ✅
-statistikada kamchiliklari bor 
-user_take_workbook yuklab berish kere
+1) Shahboz akani email pochtalarini && tekshiruvi bilan tekshirib qoyish kerak ✅
+2) Verify Admin ham SHahboz akani email pochtalarini kiritib qoyish kerak ✅
+3) course rasm qoshish ✅
+4) headers_auth token ✅
+statistikada kamchiliklari bor ✅
+user_take_workbook yuklab berish kere 
 workbook 
-
-
-middleware ichi
-admin_login
-statistika ichida filter
-
+Registratsiyani 3 ta staplik qilish ✅
+course ni tugash vaqtini keltirish ✅
+node_mailer ✅
 
 
 course                  ✅

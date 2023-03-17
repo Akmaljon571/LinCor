@@ -1,3 +1,5 @@
+import { RegistrCreateDto } from './dto/registrCreate';
+import { utilsDate } from './../../utils/date';
 import * as bcrypt from 'bcrypt';
 import Redis from 'ioredis';
 import senMail from 'src/utils/node_mailer';
@@ -13,6 +15,9 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ParolUserDto } from './dto/parol';
 import { PatchUserDto } from './dto/patch.all';
 import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
+import { fn } from 'src/utils/time_left';
+import { Request, Response } from 'express';
+import { trim } from 'src/utils/trim';
 
 @Injectable()
 export class UsersService {
@@ -38,8 +43,6 @@ export class UsersService {
 
     const newObj = {
       email: body.email,
-      first_name: body.first_name,
-      last_name: body.last_name,
       password: await bcrypt.hash(body.password, solt),
       random: randomSon,
     };
@@ -79,10 +82,35 @@ export class UsersService {
     return 'Code send Email';
   }
 
-  async registr_email(random: string) {
+  async registr_email(random: string, res: Response) {
     const result: any = await this.redis.get(random);
     const redis = JSON.parse(result);
 
+    if (!redis || redis.random != random) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const findUser = await UserEntity.findOne({
+      where: {
+        email: redis.email,
+      },
+    }).catch(() => []);
+    if (findUser) {
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    }
+
+    res.cookie('code', random);
+
+    return {
+      message: 'Malumotlar togri',
+      status: 200,
+    };
+  }
+
+  async registrCreate(req: Request, body: RegistrCreateDto, res: Response) {
+    const random = req.cookies?.code;
+    const result: any = await this.redis.get(random);
+    const redis = JSON.parse(result);
     if (!redis || redis.random != random) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
@@ -101,8 +129,8 @@ export class UsersService {
       .into(UserEntity)
       .values({
         email: redis.email,
-        first_name: redis.first_name,
-        last_name: redis.last_name,
+        first_name: body.first_name,
+        last_name: body.last_name,
         password: redis.password,
       })
       .returning('*')
@@ -119,6 +147,7 @@ export class UsersService {
     });
 
     this.redis.del(random);
+    res.clearCookie('code');
     return token;
   }
 
@@ -206,29 +235,55 @@ export class UsersService {
     const allUsers: UserEntity[] = await UserEntity.find();
     const takeCourse: CoursesOpenUsers[] = await CoursesOpenUsers.find({
       relations: {
-        user_id: true,
+        course_id: true,
       },
     });
-
-    const users = allUsers.filter(
-      (e) => e.email !== 'ahmadjonovakmal079@gmail.com',
-    );
+    const users = allUsers.filter((e) => e.email !== 'shakhboz2427@gmail.com');
     const activeUser = users.filter((e) => e.active).length;
     const delUser = users.filter((e) => !e.active).length;
 
+    console.log(takeCourse);
+    const today = utilsDate(new Date());
+    const result = [];
+    let hafta = 0;
+    let oy = 0;
+    let yil = 0;
+    for (let i = 0; i < takeCourse.length; i++) {
+      result.push(fn(utilsDate(takeCourse[i].create_data), today));
+    }
+
+    for (let i = 0; i < result.length; i++) {
+      console.log(result[i].ketgan_kun);
+      if (result[i].ketgan_kun <= 7 || result[i].ketgan_kun == undefined) {
+        if (result[i].ketgan_oy == 0) {
+          hafta += trim(takeCourse[i].course_id.course_price);
+        }
+      }
+      if (result[i].ketgan_kun <= 7 || result[i].ketgan_kun == undefined) {
+        if (result[i].ketgan_oy == 0) {
+          oy += trim(takeCourse[i].course_id.course_price);
+        }
+      }
+      if (result[i].ketgan_kun == undefined && result[i].ketgan_oy == 1) {
+        oy += trim(takeCourse[i].course_id.course_price);
+      }
+      yil += trim(takeCourse[i].course_id.course_price);
+    }
+
     const res = {
-      status: 200,
       allUsers: users,
       activeUser,
       delUser,
       byCourse: takeCourse.length,
+      hafta,
+      oy,
+      yil,
     };
-
     return res;
   }
 
   async get(id: string) {
-    const findUser = await UserEntity.findOne({
+    const findUser: any = await UserEntity.findOne({
       relations: {
         open_course: true,
         take_workbook: true,
@@ -238,6 +293,21 @@ export class UsersService {
         user_id: id,
       },
     });
+
+    const data: any = new Date();
+    const today = utilsDate(data);
+
+    for (let i = 0; i < findUser.open_course.length; i++) {
+      findUser.open_course[i].bought = utilsDate(
+        findUser.open_course[i].create_data,
+      );
+      const newObj = fn(utilsDate(findUser.open_course[i].create_data), today);
+      findUser.open_course[i].ketgan_kun = newObj.ketgan_kun;
+      findUser.open_course[i].ketgan_oy = newObj.ketgan_oy;
+      findUser.open_course[i].qolgan_kun = newObj.qolgan_kun;
+      findUser.open_course[i].qolgan_oy = newObj.qolgan_oy;
+      delete findUser.open_course[i].create_data;
+    }
 
     return findUser;
   }
@@ -314,8 +384,7 @@ export class UsersService {
         email: body.email,
       },
     }).catch(() => []);
-    // Shahboz akani email pochtalarini && tekshiruvi bilan tekshirib qoyish kerak
-    if (!findUser) {
+    if (!findUser && findUser.email !== 'shakhboz2427@gmail.com') {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
 

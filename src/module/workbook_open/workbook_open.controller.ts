@@ -47,7 +47,7 @@ export class WorkbookOpenController {
 
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
-  @ApiHeader({ name: 'admin_token', description: 'Admin token' })
+  @ApiHeader({ name: 'bearer_token', description: 'Admin token' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -117,7 +117,7 @@ export class WorkbookOpenController {
       },
     },
   })
-  @ApiHeader({ name: 'admin_token', description: 'Admin token' })
+  @ApiHeader({ name: 'bearer_token', description: 'Admin token' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('workbookopen'))
   async update(
@@ -147,7 +147,7 @@ export class WorkbookOpenController {
   @ApiCreatedResponse()
   @ApiUnprocessableEntityResponse()
   @ApiForbiddenResponse()
-  @ApiHeader({ name: 'admin_token', description: 'Admin token' })
+  @ApiHeader({ name: 'bearer_token', description: 'Admin token' })
   async delete(@Param('id') id: string, @Headers() headers: any) {
     if (await this.veridfyToken.verifyAdmin(headers)) {
       await this.workbookopenService.delete(id);
