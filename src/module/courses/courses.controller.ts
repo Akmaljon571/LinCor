@@ -48,7 +48,7 @@ export class CoursesController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Attendance Punch In' })
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin token',
     required: true,
   })
@@ -111,7 +111,7 @@ export class CoursesController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Attendance Punch In' })
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin token',
     required: true,
   })
@@ -143,7 +143,7 @@ export class CoursesController {
     },
   })
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin token',
     required: true,
   })
@@ -167,7 +167,7 @@ export class CoursesController {
   @ApiNotFoundResponse()
   @ApiNoContentResponse()
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin token',
     required: true,
   })

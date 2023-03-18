@@ -125,7 +125,7 @@ export class UsersController {
   @Get('/statistika')
   @ApiOkResponse()
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin token',
     required: false,
   })
@@ -141,7 +141,7 @@ export class UsersController {
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'User token',
     required: false,
   })
@@ -171,7 +171,7 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'User token',
     required: false,
   })
@@ -195,7 +195,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'User token',
     required: false,
   })
@@ -212,7 +212,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'User token',
     required: false,
   })

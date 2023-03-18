@@ -47,7 +47,7 @@ export class WorkbookController {
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin Token',
     required: true,
   })
@@ -60,7 +60,7 @@ export class WorkbookController {
 
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
-  @ApiHeader({ name: 'bearer_token', description: 'Admin Token' })
+  @ApiHeader({ name: 'autharization', description: 'Admin Token' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -109,7 +109,7 @@ export class WorkbookController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiHeader({ name: 'bearer_token', description: 'Admin Token' })
+  @ApiHeader({ name: 'autharization', description: 'Admin Token' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -167,7 +167,7 @@ export class WorkbookController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin token',
     required: true,
   })

@@ -46,7 +46,7 @@ export class CoursesOpenController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
-    name: 'bearer_token',
+    name: 'autharization',
     description: 'Admin token',
     required: true,
   })
