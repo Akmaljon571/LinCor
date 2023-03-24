@@ -223,6 +223,23 @@ export class UsersController {
     }
   }
 
+  @Delete('/admin/delete')
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async deleteAdmin(@Headers() header: any, @Param(':id') id: string) {
+    const userId = await this.veridfyToken.verifyAdmin(header);
+    if (userId) {
+      return await this.usersService.delete(id);
+    }
+  }
+
   @Post('/admin/login')
   @ApiBadRequestResponse()
   @ApiOkResponse()
