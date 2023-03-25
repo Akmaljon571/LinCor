@@ -6,6 +6,7 @@ import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { swaggerConfig } from './config/swagger';
 import { ErrorHandle } from './filter/custom.exetepsion.filter';
+import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
