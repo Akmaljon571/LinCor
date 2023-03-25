@@ -9,7 +9,7 @@ import { ErrorHandle } from './filter/custom.exetepsion.filter';
 import * as cors from 'cors';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
   app.use(
     cors({
