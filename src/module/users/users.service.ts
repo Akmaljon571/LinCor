@@ -82,7 +82,10 @@ export class UsersService {
 
     await this.redis.set(randomSon, JSON.stringify(newObj));
 
-    return 'Code send Email';
+    return {
+      message: 'Code send Email',
+      status: 200,
+    };
   }
 
   async registr_email(random: string, res: Response) {
