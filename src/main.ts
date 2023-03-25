@@ -8,11 +8,8 @@ import { swaggerConfig } from './config/swagger';
 import { ErrorHandle } from './filter/custom.exetepsion.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
-  app.enableCors({
-    origin: 'http://localhost:3000/',
-  });
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ErrorHandle());
