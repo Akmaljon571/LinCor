@@ -10,6 +10,12 @@ import { ErrorHandle } from './filter/custom.exetepsion.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    }),
+  );
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ErrorHandle());
