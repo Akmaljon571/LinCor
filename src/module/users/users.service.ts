@@ -49,7 +49,10 @@ export class UsersService {
 
     await this.redis.set(randomSon, JSON.stringify(newObj));
 
-    return 'Code send Email';
+    return {
+      message: 'Code send Email',
+      status: 200,
+    };
   }
 
   async login(body: LoginUserDto) {
