@@ -105,7 +105,10 @@ export class UsersService {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
 
-    res.cookie('code', random);
+    res.cookie('code', random, {
+      secure: true,
+      sameSite: 'none',
+    });
 
     return {
       message: 'Malumotlar togri',
