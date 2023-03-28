@@ -55,7 +55,14 @@ export class CoursesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['file', 'title', 'description', 'price', 'sequence'],
+      required: [
+        'file',
+        'title',
+        'description',
+        'price',
+        'sequence',
+        'bgcolor',
+      ],
       properties: {
         file: {
           type: 'string',
@@ -72,6 +79,10 @@ export class CoursesController {
         price: {
           type: 'string',
           default: '3 000 000',
+        },
+        bgcolor: {
+          type: 'string',
+          default: 'black',
         },
         sequence: {
           type: 'number',
@@ -134,6 +145,10 @@ export class CoursesController {
         price: {
           type: 'string',
           default: '3 000 000',
+        },
+        bgcolor: {
+          type: 'string',
+          default: 'black',
         },
         sequence: {
           type: 'number',

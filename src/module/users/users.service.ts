@@ -18,6 +18,7 @@ import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
 import { fn } from 'src/utils/time_left';
 import { Request, Response } from 'express';
 import { trim } from 'src/utils/trim';
+import { plus } from 'src/utils/plus';
 
 @Injectable()
 export class UsersService {
@@ -307,8 +308,12 @@ export class UsersService {
     const today = utilsDate(data);
 
     for (let i = 0; i < findUser.open_course.length; i++) {
-      findUser.open_course[i].bought = utilsDate(
+      findUser.bought_courses[i] = utilsDate(
         findUser.open_course[i].create_data,
+      );
+      findUser.open_course[i].finish = plus(
+        findUser.open_course[i].create_data,
+        6,
       );
       const newObj = fn(utilsDate(findUser.open_course[i].create_data), today);
       findUser.open_course[i].ketgan_kun = newObj.ketgan_kun;
@@ -317,7 +322,6 @@ export class UsersService {
       findUser.open_course[i].qolgan_oy = newObj.qolgan_oy;
       delete findUser.open_course[i].create_data;
     }
-
     return findUser;
   }
 

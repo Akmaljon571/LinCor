@@ -41,6 +41,12 @@ export class CourseEntity extends BaseEntity {
   course_link: string;
 
   @Column({
+    type: 'character varying',
+    nullable: false,
+  })
+  course_bgc: string;
+
+  @Column({
     type: 'integer',
     nullable: false,
     unique: true,

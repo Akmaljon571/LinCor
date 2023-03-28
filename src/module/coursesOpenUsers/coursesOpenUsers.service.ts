@@ -88,6 +88,9 @@ export class CoursesOpenService {
         });
     });
 
-    return 'The user has purchased a course';
+    return {
+      messgae: 'The user has purchased a course',
+      status: 200,
+    };
   }
 }

@@ -44,4 +44,14 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     required: true,
   })
   sequence: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    name: 'bgcolor',
+    type: 'string',
+    default: '#fff',
+    required: true,
+  })
+  bgcolor: string;
 }

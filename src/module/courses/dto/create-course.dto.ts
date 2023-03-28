@@ -43,4 +43,14 @@ export class CreateCourseDto {
     required: true,
   })
   sequence: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    name: 'bgcolor',
+    type: 'string',
+    default: '#fff',
+    required: true,
+  })
+  bgcolor: string;
 }
