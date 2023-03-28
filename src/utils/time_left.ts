@@ -25,7 +25,7 @@ export const fn = (time_left: string, today: string) => {
     const qolgan_oy = 6 - oy - 1;
     if (oy > 6) {
       return {
-        finish: 'Kurs olingan sana tugagan',
+        finish: true,
       };
     }
 

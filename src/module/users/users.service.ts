@@ -207,7 +207,10 @@ export class UsersService {
 
     await this.redis.set(randomSon, JSON.stringify(newObj));
 
-    return 'Code send Email';
+    return {
+      message: 'Code send Email',
+      status: 200,
+    };
   }
 
   async parol_email(random: string, body: ParolEmailUserDto) {
@@ -238,7 +241,10 @@ export class UsersService {
       })
       .where({ user_id: findUser.user_id })
       .execute();
-    return 'User password successfully updated';
+    return {
+      message: 'User password successfully updated',
+      status: 200,
+    };
   }
 
   async statistika() {
@@ -306,22 +312,38 @@ export class UsersService {
 
     const data: any = new Date();
     const today = utilsDate(data);
+    findUser.expired_courses = [];
+    findUser.bought_courses = [];
 
     for (let i = 0; i < findUser.open_course.length; i++) {
-      findUser.bought_courses[i] = utilsDate(
-        findUser.open_course[i].create_data,
-      );
-      findUser.open_course[i].finish = plus(
-        findUser.open_course[i].create_data,
-        6,
-      );
       const newObj = fn(utilsDate(findUser.open_course[i].create_data), today);
-      findUser.open_course[i].ketgan_kun = newObj.ketgan_kun;
-      findUser.open_course[i].ketgan_oy = newObj.ketgan_oy;
-      findUser.open_course[i].qolgan_kun = newObj.qolgan_kun;
-      findUser.open_course[i].qolgan_oy = newObj.qolgan_oy;
-      delete findUser.open_course[i].create_data;
+      if (newObj.finish) {
+        findUser.expired_courses.push(findUser.open_course[i]);
+        findUser.expired_courses[i].bought = utilsDate(
+          findUser.open_course[i].create_data,
+        );
+        findUser.expired_courses[i].expired = plus(
+          findUser.open_course[i].create_data,
+          6,
+        );
+        delete findUser.expired_courses[i].create_data;
+      } else {
+        findUser.bought_courses.push(findUser.open_course[i]);
+        findUser.bought_courses[i].bought = utilsDate(
+          findUser.open_course[i].create_data,
+        );
+        findUser.bought_courses[i].expired = plus(
+          findUser.open_course[i].create_data,
+          6,
+        );
+        findUser.bought_courses[i].ketgan_kun = newObj.ketgan_kun;
+        findUser.bought_courses[i].ketgan_oy = newObj.ketgan_oy;
+        findUser.bought_courses[i].qolgan_kun = newObj.qolgan_kun;
+        findUser.bought_courses[i].qolgan_oy = newObj.qolgan_oy;
+        delete findUser.bought_courses[i].create_data;
+      }
     }
+    delete findUser.open_course;
     return findUser;
   }
 
@@ -367,6 +389,70 @@ export class UsersService {
         user_id: userId,
       })
       .execute();
+  }
+
+  async updatePassword(body: ParolEmailUserDto, id: string) {
+    if (body.password == body.newPassword) {
+      const randomSon = random();
+      const findUser = await UserEntity.findOne({
+        where: {
+          user_id: id,
+        },
+      }).catch(() => {
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      });
+      if (!findUser) {
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      }
+
+      await senMail(findUser.email, randomSon);
+
+      const newObj = {
+        email: findUser.email,
+        password: body.password,
+        random: randomSon,
+      };
+
+      await this.redis.set(randomSon, JSON.stringify(newObj));
+
+      return {
+        message: 'Code send Email',
+        status: 200,
+      };
+    } else {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updatePassword_email(random: string) {
+    const result: any = await this.redis.get(random);
+    const redis = JSON.parse(result);
+
+    if (!redis || redis.random != random) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    const findUser: any = await UserEntity.findOne({
+      where: {
+        email: redis.email,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    this.redis.del(random);
+
+    const solt = await bcrypt.genSalt();
+    await UserEntity.createQueryBuilder()
+      .update()
+      .set({
+        password: await bcrypt.hash(redis.password, solt),
+      })
+      .where({ user_id: findUser.user_id })
+      .execute();
+    return {
+      message: 'User password successfully updated',
+      status: 200,
+    };
   }
 
   async delete(userId: string) {

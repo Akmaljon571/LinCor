@@ -206,6 +206,46 @@ export class UsersController {
     }
   }
 
+  @Post('/update/password')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: true,
+  })
+  async updatePassword(
+    @Body() body: ParolEmailUserDto,
+    @Headers() header: any,
+  ) {
+    const userId = await this.veridfyToken.verifyUser(header);
+    if (userId) {
+      return await this.usersService.updatePassword(body, userId);
+    }
+  }
+
+  @Post('/update/password_email/:code')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: true,
+  })
+  async updatePassword_email(
+    @Param('code') param: string,
+    @Headers() header: any,
+  ) {
+    const userId = await this.veridfyToken.verifyUser(header);
+    if (userId) {
+      return await this.usersService.updatePassword_email(param);
+    }
+  }
+
   @Delete('/delete')
   @ApiNoContentResponse()
   @ApiBadRequestResponse()
