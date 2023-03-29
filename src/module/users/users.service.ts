@@ -524,6 +524,9 @@ export class UsersService {
     });
 
     this.redis.del(random);
-    return token;
+    return {
+      token,
+      status: 200,
+    };
   }
 }
