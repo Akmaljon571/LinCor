@@ -478,22 +478,10 @@ export class UsersService {
 
   async admin_login(body: LoginUserDto) {
     const randomSon = random();
-    const findUser: any = await UserEntity.findOne({
-      where: {
-        email: body.email,
-      },
-    }).catch(() => []);
     if (
-      !findUser &&
-      findUser.email !== 'ahmadjonovakmal079@gmail.com' &&
-      findUser.password !== 'adminprodvd2427'
+      body.email !== 'ahmadjonovakmal079@gmail.com' &&
+      body.password !== 'adminprodvd2427'
     ) {
-      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
-    }
-
-    const solt = await bcrypt.genSalt();
-    const pass = await bcrypt.compare(body.password, findUser.password);
-    if (!pass) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
 
@@ -501,13 +489,16 @@ export class UsersService {
 
     const newObj = {
       email: body.email,
-      password: await bcrypt.hash(body.password, solt),
+      password: body.password,
       random: randomSon,
     };
 
     await this.redis.set(randomSon, JSON.stringify(newObj));
 
-    return 'Code send Email';
+    return {
+      message: 'Code send Email',
+      status: 200,
+    };
   }
 
   async admin_login_email(random: string) {

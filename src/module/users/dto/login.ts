@@ -3,16 +3,6 @@ import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class LoginUserDto {
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty({
-    name: 'password',
-    type: 'string',
-    default: '1a3s4ftf',
-    required: true,
-  })
-  password: string;
-
-  @IsString()
   @Length(0, 100)
   @IsNotEmpty()
   @ApiProperty({
@@ -22,4 +12,14 @@ export class LoginUserDto {
     required: true,
   })
   email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    name: 'password',
+    type: 'string',
+    default: '1a3s4ftf',
+    required: true,
+  })
+  password: string;
 }
