@@ -51,7 +51,7 @@ export class CoursesService {
     return course;
   }
 
-  async update(body: UpdateCourseDto, id: string, link: string) {
+  async update(body: UpdateCourseDto, id: string, link: any) {
     const course = await CourseEntity.findOneBy({
       course_id: id,
     }).catch(() => {

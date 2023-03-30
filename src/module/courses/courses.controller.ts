@@ -169,9 +169,13 @@ export class CoursesController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (await this.veridfyToken.verifyAdmin(headers)) {
-      const bool: any = googleCloud(file);
-      if (bool) {
-        await this.coursesService.update(updateCourseDto, id, bool);
+      if (file) {
+        const bool: any = googleCloud(file);
+        if (bool) {
+          await this.coursesService.update(updateCourseDto, id, bool);
+        }
+      } else {
+        await this.coursesService.update(updateCourseDto, id, false);
       }
     }
   }
