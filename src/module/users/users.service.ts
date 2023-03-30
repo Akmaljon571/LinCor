@@ -248,17 +248,15 @@ export class UsersService {
   }
 
   async statistika() {
-    const allUsers: UserEntity[] = await UserEntity.find();
+    const users: UserEntity[] = await UserEntity.find();
     const takeCourse: CoursesOpenUsers[] = await CoursesOpenUsers.find({
       relations: {
         course_id: true,
       },
     });
-    const users = allUsers.filter((e) => e.email !== 'shakhboz2427@gmail.com');
     const activeUser = users.filter((e) => e.active).length;
     const delUser = users.filter((e) => !e.active).length;
 
-    console.log(takeCourse);
     const today = utilsDate(new Date());
     const result = [];
     let hafta = 0;
@@ -521,6 +519,7 @@ export class UsersService {
     const token = jwt.sign({
       id: findUser.user_id,
       email: findUser.email,
+      password: findUser.password,
     });
 
     this.redis.del(random);
