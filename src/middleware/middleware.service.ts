@@ -22,7 +22,7 @@ export class TokenMiddleware {
     ) {
       throw new HttpException('Siz Admin emasiz', HttpStatus.BAD_REQUEST);
     }
-    return admin.user_id;
+    return admin?.id;
   }
 
   async verifyUser(headers: any) {
