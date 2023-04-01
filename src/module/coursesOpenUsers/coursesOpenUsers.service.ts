@@ -93,4 +93,21 @@ export class CoursesOpenService {
       status: 200,
     };
   }
+
+  async get(id: string) {
+    const all = await CoursesOpenUsers.find({
+      relations: {
+        user_id: true
+      },
+      where: {
+        course_id: id  as any
+      }
+    })
+
+    const users = []
+    for (let i = 0; i < all.length; i++) {
+      users.push(all[i].user_id)
+    }
+    return users
+  }
 }

@@ -5,12 +5,15 @@ import {
   Headers,
   HttpCode,
   HttpStatus,
+  Get,
+  Param,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiHeader,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { TokenMiddleware } from 'src/middleware/middleware.service';
@@ -57,6 +60,25 @@ export class CoursesOpenController {
     const adminId = await this.adminToken.verifyAdmin(header);
     if (adminId) {
       return await this.coursesOpenService.create(createCourseOpenUserDto);
+    }
+  }
+
+  @Get('/get/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: true,
+  })
+  async get(
+    @Param('id') id: string,
+    @Headers() header: any,
+  ) {
+    const adminId = await this.adminToken.verifyAdmin(header);
+    if (adminId) {
+      return await this.coursesOpenService.get(id);
     }
   }
 }
