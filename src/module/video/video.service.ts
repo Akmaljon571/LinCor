@@ -31,8 +31,7 @@ export class VideoService {
         videos_course: course,
       })
       .execute()
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
         throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
       });
   }

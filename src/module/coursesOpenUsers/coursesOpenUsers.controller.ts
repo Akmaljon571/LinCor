@@ -7,11 +7,13 @@ import {
   HttpStatus,
   Get,
   Param,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiHeader,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
@@ -79,6 +81,25 @@ export class CoursesOpenController {
     const adminId = await this.adminToken.verifyAdmin(header);
     if (adminId) {
       return await this.coursesOpenService.get(id);
+    }
+  }
+
+  @Delete('/delete')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNotFoundResponse()
+  @ApiNoContentResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: true,
+  })
+  async deleted(
+    @Body() body: CreateCourseOpenDto,
+    @Headers() header: any,
+  ) {
+    const adminId = await this.adminToken.verifyAdmin(header);
+    if (adminId) {
+      return await this.coursesOpenService.deleted(body.userId, body.courseId);
     }
   }
 }

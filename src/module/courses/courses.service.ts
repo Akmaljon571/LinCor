@@ -7,7 +7,6 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 @Injectable()
 export class CoursesService {
   async create(body: CreateCourseDto, link: string) {
-    console.log(link)
     await CourseEntity.createQueryBuilder()
       .insert()
       .into(CourseEntity)
@@ -20,8 +19,7 @@ export class CoursesService {
         course_bgc: body.bgcolor,
       })
       .execute()
-      .catch((e) => {
-        console.log(e)
+      .catch(() => {
         throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
       });
   }
@@ -99,8 +97,7 @@ export class CoursesService {
         course_id: id,
       })
       .execute()
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
       });
   }

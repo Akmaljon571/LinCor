@@ -77,7 +77,6 @@ export class UserTakeBookService {
         HttpStatus.NOT_FOUND,
       );
     }
-    console.log(byWorkbook);
     if (byWorkbook.utw_active) {
       //
 

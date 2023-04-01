@@ -267,7 +267,6 @@ export class UsersService {
     }
 
     for (let i = 0; i < result.length; i++) {
-      console.log(result[i].ketgan_kun);
       if (result[i].ketgan_kun <= 7 || result[i].ketgan_kun == undefined) {
         if (result[i].ketgan_oy == 0) {
           hafta += trim(takeCourse[i].course_id.course_price);

@@ -90,17 +90,20 @@ export class CoursesOpenService {
 
     return {
       messgae: 'The user has purchased a course',
-      status: 200,
+      status: 201,
     };
   }
 
-  async get(id: string) {
+  async get(id: any) {
+    if (id == 'false' || id == 'undefined') {
+      return []
+    }
     const all = await CoursesOpenUsers.find({
       relations: {
         user_id: true
       },
       where: {
-        course_id: id  as any
+        course_id: id
       }
     })
 
@@ -109,5 +112,56 @@ export class CoursesOpenService {
       users.push(all[i].user_id)
     }
     return users
+  }
+
+  async deleted(userId: string, courseId: string) {
+    const user: any = await UserEntity.findOne({
+      where: {
+        user_id: userId,
+      },
+    }).catch(() => {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    });
+
+    if (!user) {
+      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const course: any = await CourseEntity.findOne({
+      where: {
+        course_id: courseId,
+      },
+    }).catch(() => {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    });
+    if (!course) {
+      return new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    const userbyCourse = await CoursesOpenUsers.findOne({
+      where: {
+        course_id: course.course_id,
+        user_id: user.user_id,
+      },
+    });
+    if (!userbyCourse) {
+      throw new HttpException('Not Fount', HttpStatus.BAD_REQUEST);
+    }
+
+    await CoursesOpenUsers.createQueryBuilder()
+      .delete()
+      .from(CoursesOpenUsers)
+      .where({
+        user_id: user.user_id,
+        course_id: course.course_id,
+      })
+      .execute()
+      .catch(() => {
+        throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+      });
+    return  {
+        messgae: 'The user has purchased a course',
+        status: 200,
+    }
   }
 }
