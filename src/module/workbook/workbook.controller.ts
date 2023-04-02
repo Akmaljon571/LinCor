@@ -42,7 +42,7 @@ export class WorkbookController {
     private readonly adminToken: TokenMiddleware,
   ) {}
 
-  @Get('/admin')
+  @Get('/admin/:course_id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -51,11 +51,10 @@ export class WorkbookController {
     description: 'Admin Token',
     required: true,
   })
-  async findAll(@Headers() header: any) {
-    const userId = await this.adminToken.verifyAdmin(header);
-    if (userId) {
-      return await this.workbookService.findAll();
-    }
+  async get(
+    @Param('course_id') id: string
+  ) {
+    return await this.workbookService.find(id);
   }
 
   @Post('/create')

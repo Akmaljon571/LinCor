@@ -7,11 +7,24 @@ import { HttpException } from '@nestjs/common';
 
 @Injectable()
 export class WorkbookService {
-  async findAll() {
-    return await Workbook.find({
-      order: {
-        workbook_sequence: 'ASC',
+  async find(id: string) {
+    if (id == 'false' || id == 'undefined') {
+      return []
+    }
+    return await CourseEntity.findOne({
+      where: {
+        course_id: id,
       },
+      relations: {
+        workbook: true
+      },
+      order: {
+        workbook: {
+          workbook_sequence: 'ASC'
+        },
+      },
+    }).catch(() => {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     });
   }
 
@@ -29,6 +42,29 @@ export class WorkbookService {
 
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const findWorkbook: any = await CourseEntity.findOne({
+      where: {
+        course_id: course.course_id,
+      },
+      relations: {
+        workbook: true
+      },
+      order: {
+        workbook: {
+          workbook_sequence: 'ASC'
+        },
+      },
+    })
+    .catch((e) => {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    });
+    
+    for (let i = 0; i < findWorkbook?.workbook?.length; i++) {
+      if (findWorkbook.workbook[i].workbook_sequence == workbookbody.sequence) {
+        throw new HttpException('Book Already added', HttpStatus.BAD_REQUEST);
+      }
     }
 
     await Workbook.createQueryBuilder()
@@ -60,6 +96,28 @@ export class WorkbookService {
 
     if (!workbook) {
       throw new HttpException('Workbook Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const findWorkbook: any = await CourseEntity.findOne({
+      where: {
+        course_id: workbook.workbook_course
+      },
+      relations: {
+        workbook: true
+      },
+      order: {
+        workbook: {
+          workbook_sequence: 'ASC'
+        },
+      },
+    })
+    .catch(() => {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    });
+    for (let i = 0; i < findWorkbook?.workbook?.length; i++) {
+      if (findWorkbook.workbook[i].workbook_sequence == workbookbody.sequence) {
+        throw new HttpException('Book Already added', HttpStatus.BAD_REQUEST);
+      }
     }
 
     await Workbook.createQueryBuilder()

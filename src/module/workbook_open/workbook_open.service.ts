@@ -9,12 +9,33 @@ import { UpdateWorkbookOpenDto } from './dto/update-workbook_open.dto';
 export class WorkbookOpenService {
   constructor(readonly workbookopenRepo: Repository<WorkbookOpen>) {}
 
-  async get(): Promise<any> {
-    return await WorkbookOpen.find({
-      relations: {
-        openbook_course: true,
+  async get(id: any): Promise<any> {
+    if (id == 'false' || id == 'undefined') {
+      return []
+    }
+    return await CourseEntity.findOne({
+      where: {
+        course_id: id,
       },
+      relations: {
+        workbook_open: true
+      },
+      order: {
+        workbook_open: {
+          openbook_sequence: 'ASC'
+        },
+      },
+    }).catch(() => {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     });
+  }
+
+  async one(id: any) {
+    if (id == 'false' || id == 'undefined') {
+      return
+    }
+
+    //
   }
 
   async create(payload: CreateWorkbookOpenDto, file: any): Promise<void> {
@@ -25,6 +46,29 @@ export class WorkbookOpenService {
     });
     if (!findCourse) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const findWorkbook: any = await CourseEntity.findOne({
+      where: {
+        course_id: findCourse.course_id,
+      },
+      relations: {
+        workbook_open: true
+      },
+      order: {
+        workbook_open: {
+          openbook_sequence: 'ASC'
+        },
+      },
+    })
+    .catch((e) => {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    });
+    
+    for (let i = 0; i < findWorkbook.workbook_open.length; i++) {
+      if (findWorkbook.workbook_open[i].openbook_sequence == payload.sequence) {
+        throw new HttpException('Book Already added', HttpStatus.BAD_REQUEST);
+      }
     }
 
     await WorkbookOpen.createQueryBuilder()
@@ -62,6 +106,29 @@ export class WorkbookOpenService {
     });
     if (!findWorkbook) {
       throw new HttpException('Workbook Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const find: any = await CourseEntity.findOne({
+      where: {
+        course_id: findCourse.course_id,
+      },
+      relations: {
+        workbook_open: true
+      },
+      order: {
+        workbook_open: {
+          openbook_sequence: 'ASC'
+        },
+      },
+    })
+    .catch((e) => {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    });
+    
+    for (let i = 0; i < find.workbook_open.length; i++) {
+      if (find.workbook_open[i].openbook_sequence == payload.sequence) {
+        throw new HttpException('Book Already added', HttpStatus.BAD_REQUEST);
+      }
     }
 
     await WorkbookOpen.createQueryBuilder()

@@ -263,7 +263,7 @@ export class UsersController {
     }
   }
 
-  @Delete('/admin/delete')
+  @Delete('/admin/delete/:id')
   @ApiNoContentResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
@@ -273,7 +273,7 @@ export class UsersController {
     description: 'Admin token',
     required: false,
   })
-  async deleteAdmin(@Headers() header: any, @Param(':id') id: string) {
+  async deleteAdmin(@Headers() header: any, @Param('id') id: string) {
     const userId = await this.veridfyToken.verifyAdmin(header);
     if (userId) {
       return await this.usersService.delete(id);

@@ -20,12 +20,15 @@ import { TokenMiddleware } from 'src/middleware/middleware.service';
 import { googleCloud } from 'src/utils/google-cloud';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
   ApiUnprocessableEntityResponse,
@@ -40,9 +43,26 @@ export class WorkbookOpenController {
     private readonly veridfyToken: TokenMiddleware,
   ) {}
 
-  @Get('/getall')
-  async get() {
-    return await this.workbookopenService.get();
+  @Get('/get/:course_id')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin Token',
+    required: true,
+  })
+  async get(
+    @Param('course_id') id: string
+  ) {
+    return await this.workbookopenService.get(id);
+  }
+
+  @Get('/get/:id')
+  async one(
+    @Param('id') id: string
+  ) {
+    return await this.workbookopenService.one(id);
   }
 
   @Post('/create')
@@ -70,8 +90,14 @@ export class WorkbookOpenController {
   })
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Attendance Punch In' })
-  @ApiNoContentResponse()
   @ApiCreatedResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin Token',
+    required: true,
+  })
   @ApiUnprocessableEntityResponse()
   @ApiForbiddenResponse()
   @UseInterceptors(FileInterceptor('file'))
