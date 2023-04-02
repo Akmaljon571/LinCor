@@ -213,7 +213,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiHeader({
     name: 'autharization',
-    description: 'Admin token',
+    description: 'User token',
     required: true,
   })
   async updatePassword(
@@ -233,7 +233,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @ApiHeader({
     name: 'autharization',
-    description: 'Admin token',
+    description: 'User token',
     required: true,
   })
   async updatePassword_email(
@@ -243,6 +243,26 @@ export class UsersController {
     const userId = await this.veridfyToken.verifyUser(header);
     if (userId) {
       return await this.usersService.updatePassword_email(param);
+    }
+  }
+
+  @Put('/update/restart/:id')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: true,
+  })
+  async restart(
+    @Param('id') param: string,
+    @Headers() header: any,
+  ) {
+    const userId = await this.veridfyToken.verifyUser(header);
+    if (userId) {
+      return await this.usersService.restart(param);
     }
   }
 

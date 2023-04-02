@@ -388,6 +388,27 @@ export class UsersService {
       .execute();
   }
 
+  async restart(userId: string) {
+    const findUser: any = await UserEntity.findOne({
+      where: {
+        user_id: userId,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    await UserEntity.createQueryBuilder()
+      .update()
+      .set({
+        active: true
+      })
+      .where({
+        user_id: userId,
+      })
+      .execute();
+  }
+
   async updatePassword(body: ParolEmailUserDto, id: string) {
     if (body.password == body.newPassword) {
       const randomSon = random();
