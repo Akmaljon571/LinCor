@@ -4,10 +4,18 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CourseEntity } from 'src/entities/course.entity';
 import { UserEntity } from 'src/entities/user.entity';
 import { UserTakeWorkbook } from 'src/entities/user_take_workbook.entity';
+import { Storage } from '@google-cloud/storage';
+import { join } from 'path';
+import { Response } from 'express';
 
 @Injectable()
 export class UserTakeBookService {
-  async findOne(user_id: string, workbook_id: string) {
+  private storage = new Storage({
+    projectId: 'peerless-watch-382417',
+    keyFilename: join(process.cwd(), 'src', 'utils/key.json'),
+  });
+
+  async findOne(user_id: string, workbook_id: string, res: Response) {
     const workbook: any = await Workbook.findOne({
       relations: {
         workbook_course: true,
@@ -78,7 +86,19 @@ export class UserTakeBookService {
       );
     }
     if (byWorkbook.utw_active) {
-      //
+      const filename = workbook.workbook_link + '.pdf';
+      const bucketName = 'ishladi';
+      const bucket = this.storage.bucket(bucketName);
+      const file = bucket.file(filename);
+  
+      const imageData: any = await file.download();
+  
+      res.set({
+        'Content-Type': 'image/jpeg',
+        'Cache-Control': 'public, max-age=31536000',
+      });
+  
+      res.download(imageData[0]);
 
       await UserTakeWorkbook.createQueryBuilder()
         .update()

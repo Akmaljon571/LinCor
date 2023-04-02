@@ -4,10 +4,20 @@ import { Repository } from 'typeorm';
 import { CreateWorkbookOpenDto } from './dto/create-workbook_open.dto';
 import { CourseEntity } from 'src/entities/course.entity';
 import { UpdateWorkbookOpenDto } from './dto/update-workbook_open.dto';
+import { Response } from 'express';
+import { File, Storage } from '@google-cloud/storage';
+import { join } from 'path';
 
 @Injectable()
 export class WorkbookOpenService {
-  constructor(readonly workbookopenRepo: Repository<WorkbookOpen>) {}
+  constructor(
+    readonly workbookopenRepo: Repository<WorkbookOpen>,
+  ) {}
+
+  private storage = new Storage({
+    projectId: 'peerless-watch-382417',
+    keyFilename: join(process.cwd(), 'src', 'utils', '/key.json'),
+  });
 
   async get(id: any): Promise<any> {
     if (id == 'false' || id == 'undefined') {
@@ -30,12 +40,27 @@ export class WorkbookOpenService {
     });
   }
 
-  async one(id: any) {
-    if (id == 'false' || id == 'undefined') {
-      return
-    }
+  async one(id: string, res: Response) {
+    const work = await WorkbookOpen.findOne({
+      where: {
+        openbook_id: id
+      }
+    })
 
-    //
+    const bucketName = 'ishladi';
+    const fileName = work.openbook_link;
+
+    const file = this.storage.bucket(bucketName).file(fileName);
+
+      const storage = new Storage();
+  
+      const [url] = await storage.bucket(bucketName).file(fileName).getSignedUrl({
+        version: 'v4',
+        action: 'read',
+        expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+      });
+  
+      return res.attachment(url);
   }
 
   async create(payload: CreateWorkbookOpenDto, file: any): Promise<void> {
@@ -61,10 +86,10 @@ export class WorkbookOpenService {
         },
       },
     })
-    .catch((e) => {
-      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    });
-    
+      .catch((e) => {
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      });
+
     for (let i = 0; i < findWorkbook.workbook_open.length; i++) {
       if (findWorkbook.workbook_open[i].openbook_sequence == payload.sequence) {
         throw new HttpException('Book Already added', HttpStatus.BAD_REQUEST);
@@ -121,10 +146,10 @@ export class WorkbookOpenService {
         },
       },
     })
-    .catch((e) => {
-      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    });
-    
+      .catch((e) => {
+        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      });
+
     for (let i = 0; i < find.workbook_open.length; i++) {
       if (find.workbook_open[i].openbook_sequence == payload.sequence) {
         throw new HttpException('Book Already added', HttpStatus.BAD_REQUEST);

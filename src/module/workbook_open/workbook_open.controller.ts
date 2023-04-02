@@ -11,6 +11,7 @@ import {
   HttpStatus,
   UseInterceptors,
   HttpException,
+  Res,
   Delete,
 } from '@nestjs/common';
 import { WorkbookOpenService } from './workbook_open.service';
@@ -34,6 +35,7 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { extname } from 'path';
+import { Response } from 'express';
 
 @Controller('workbookopen')
 @ApiTags('Workbook Open')
@@ -47,22 +49,18 @@ export class WorkbookOpenController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  @ApiHeader({
-    name: 'autharization',
-    description: 'Admin Token',
-    required: true,
-  })
   async get(
     @Param('course_id') id: string
   ) {
     return await this.workbookopenService.get(id);
   }
 
-  @Get('/get/:id')
+  @Get('/one/:id')
   async one(
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Res() res: Response
   ) {
-    return await this.workbookopenService.one(id);
+    return await this.workbookopenService.one(id, res);
   }
 
   @Post('/create')
