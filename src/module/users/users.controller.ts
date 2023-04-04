@@ -153,8 +153,8 @@ export class UsersController {
   }
 
   @Put('/update_img')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiNoContentResponse()
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse()
   @ApiBody({
     schema: {
       type: 'object',
@@ -184,7 +184,7 @@ export class UsersController {
     if (userId) {
       const bool: any = googleCloud(file);
       if (bool) {
-        await this.usersService.updateImage(userId, bool);
+        return await this.usersService.updateImage(userId, bool);
       }
     }
   }

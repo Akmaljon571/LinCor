@@ -379,6 +379,11 @@ export class UsersService {
         user_id: userId,
       })
       .execute();
+    
+    return {
+      img,
+      status: 200
+    }
   }
 
   async patch(userId: string, body: PatchUserDto) {
@@ -401,6 +406,8 @@ export class UsersService {
         user_id: userId,
       })
       .execute();
+
+    
   }
 
   async restart(userId: string) {
