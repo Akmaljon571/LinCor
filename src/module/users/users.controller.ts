@@ -45,7 +45,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly veridfyToken: TokenMiddleware,
-  ) {}
+  ) { }
 
   @Post('/registr')
   @ApiBadRequestResponse()

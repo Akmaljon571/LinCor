@@ -23,14 +23,4 @@ export class PatchUserDto {
   })
   @IsNotEmpty()
   last_name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({
-    name: 'password',
-    type: 'string',
-    default: '1a3s4ftf',
-    required: true,
-  })
-  password: string;
 }

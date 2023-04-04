@@ -396,7 +396,6 @@ export class UsersService {
       .set({
         first_name: body.first_name || findUser.first_name,
         last_name: body.last_name || findUser.last_name,
-        password: body.password || findUser.password,
       })
       .where({
         user_id: userId,
