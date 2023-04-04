@@ -76,11 +76,10 @@ export class UsersController {
   @ApiUnprocessableEntityResponse()
   @HttpCode(HttpStatus.OK)
   async registrCreate(
-    @Req() request: Request,
     @Body() body: RegistrCreateDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return await this.usersService.registrCreate(request, body, res);
+    return await this.usersService.registrCreate(body, res);
   }
 
   @Post('/login')

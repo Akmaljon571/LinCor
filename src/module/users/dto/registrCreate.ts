@@ -23,4 +23,15 @@ export class RegistrCreateDto {
   })
   @IsNotEmpty()
   last_name: string;
+
+  @IsString()
+  @Length(0, 10)
+  @ApiProperty({
+    name: 'code',
+    type: 'string',
+    default: '52145',
+    required: true,
+  })
+  @IsNotEmpty()
+  code: string;
 }

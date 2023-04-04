@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@ccmos/nestjs-moment": "^0.1.0",
-    "@fastify/cookie": "^8.3.0",
     "@google-cloud/storage": "^6.9.3",
     "@liaoliaots/nestjs-redis": "^9.0.5",
     "@nestjs-modules/mailer": "^1.8.1",

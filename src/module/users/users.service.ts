@@ -35,6 +35,7 @@ export class UsersService {
         email: body.email,
       },
     }).catch(() => []);
+    console.log(findUser)
     if (findUser) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
@@ -117,8 +118,8 @@ export class UsersService {
     };
   }
 
-  async registrCreate(req: Request, body: RegistrCreateDto, res: Response) {
-    const random = req.cookies?.code;
+  async registrCreate(body: RegistrCreateDto, res: Response) {
+    const random = body.code;
     const result: any = await this.redis.get(random);
     const redis = JSON.parse(result);
     if (!redis || redis.random != random) {
@@ -157,7 +158,6 @@ export class UsersService {
     });
 
     this.redis.del(random);
-    res.clearCookie('code');
     return token;
   }
 
