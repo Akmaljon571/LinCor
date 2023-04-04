@@ -298,7 +298,11 @@ export class UsersService {
   async get(id: string) {
     const findUser: any = await UserEntity.findOne({
       relations: {
-        open_course: true,
+        open_course: {
+          course_id: {
+            course_videos: true
+          }
+        },
         take_workbook: true,
         watch_video: true,
       },
@@ -316,6 +320,10 @@ export class UsersService {
       const newObj = fn(utilsDate(findUser.open_course[i].create_data), today);
       if (newObj.finish) {
         findUser.expired_courses.push(findUser.open_course[i]);
+        findUser.expired_courses[i].course = findUser.expired_courses[i].course_id.course_id;
+        findUser.expired_courses[i].course_title = findUser.expired_courses[i].course_id.course_title;
+        findUser.expired_courses[i].video_count = findUser.expired_courses[i].course_id.course_videos.length;
+        findUser.expired_courses[i].course_bgcolor = findUser.expired_courses[i].course_id.course_bgc;
         findUser.expired_courses[i].bought = utilsDate(
           findUser.open_course[i].create_data,
         );
@@ -324,8 +332,14 @@ export class UsersService {
           6,
         );
         delete findUser.expired_courses[i].create_data;
+        delete findUser.expired_courses[i].course_id;
+        delete findUser.expired_courses[i].cou_id;
       } else {
         findUser.bought_courses.push(findUser.open_course[i]);
+        findUser.bought_courses[i].course = findUser.bought_courses[i].course_id.course_id;
+        findUser.bought_courses[i].course_title = findUser.bought_courses[i].course_id.course_title;
+        findUser.bought_courses[i].video_count = findUser.bought_courses[i].course_id.course_videos.length;
+        findUser.bought_courses[i].course_bgcolor = findUser.bought_courses[i].course_id.course_bgc;
         findUser.bought_courses[i].bought = utilsDate(
           findUser.open_course[i].create_data,
         );
@@ -338,6 +352,8 @@ export class UsersService {
         findUser.bought_courses[i].qolgan_kun = newObj.qolgan_kun;
         findUser.bought_courses[i].qolgan_oy = newObj.qolgan_oy;
         delete findUser.bought_courses[i].create_data;
+        delete findUser.bought_courses[i].course_id;
+        delete findUser.bought_courses[i].cou_id;
       }
     }
     delete findUser.open_course;
