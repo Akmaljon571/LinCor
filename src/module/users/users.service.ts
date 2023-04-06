@@ -16,7 +16,7 @@ import { ParolUserDto } from './dto/parol';
 import { PatchUserDto } from './dto/patch.all';
 import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
 import { fn } from 'src/utils/time_left';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { trim } from 'src/utils/trim';
 import { plus } from 'src/utils/plus';
 
@@ -90,7 +90,7 @@ export class UsersService {
     };
   }
 
-  async registr_email(random: string, res: Response) {
+  async registr_email(random: string) {
     const result: any = await this.redis.get(random);
     const redis = JSON.parse(result);
 
@@ -107,18 +107,13 @@ export class UsersService {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
 
-    res.cookie('code', random, {
-      secure: true,
-      sameSite: 'none',
-    });
-
     return {
       message: 'Malumotlar togri',
       status: 200,
     };
   }
 
-  async registrCreate(body: RegistrCreateDto, res: Response) {
+  async registrCreate(body: RegistrCreateDto) {
     const random = body.code;
     const result: any = await this.redis.get(random);
     const redis = JSON.parse(result);

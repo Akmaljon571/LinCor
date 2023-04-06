@@ -64,9 +64,8 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async registrEmail(
     @Param('code') param: string,
-    @Res({ passthrough: true }) res: Response,
   ) {
-    return await this.usersService.registr_email(param, res);
+    return await this.usersService.registr_email(param);
   }
 
   @Post('/registr/create')
@@ -79,7 +78,7 @@ export class UsersController {
     @Body() body: RegistrCreateDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return await this.usersService.registrCreate(body, res);
+    return await this.usersService.registrCreate(body);
   }
 
   @Post('/login')
