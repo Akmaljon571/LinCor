@@ -113,6 +113,17 @@ export class CoursesController {
     return await this.coursesService.findAll();
   }
 
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  async findOne(
+    @Param('id') id: string
+  ) {
+    return await this.coursesService.findOne(id);
+  }
+
   @Patch('/update/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBadRequestResponse()

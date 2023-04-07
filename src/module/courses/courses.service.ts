@@ -51,6 +51,21 @@ export class CoursesService {
     return course;
   }
 
+  async findOne(id: string) {
+    const course: any = await CourseEntity.findOne({
+      order: {
+        course_sequence: 'ASC',
+      },
+      where: {
+        course_id: id
+      }
+    }).catch(() => {
+      throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
+    });
+
+    return course;
+  }
+
   async update(body: UpdateCourseDto, id: string, link: any) {
     const course = await CourseEntity.findOneBy({
       course_id: id,
