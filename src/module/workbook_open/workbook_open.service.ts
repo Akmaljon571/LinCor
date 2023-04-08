@@ -40,27 +40,12 @@ export class WorkbookOpenService {
     });
   }
 
-  async one(id: string, res: Response) {
-    const work = await WorkbookOpen.findOne({
+  async one(id: string) {
+    return await WorkbookOpen.findOne({
       where: {
         openbook_id: id
       }
     })
-
-    const bucketName = 'ishladi';
-    const fileName = work.openbook_link;
-
-    const file = this.storage.bucket(bucketName).file(fileName);
-
-      const storage = new Storage();
-  
-      const [url] = await storage.bucket(bucketName).file(fileName).getSignedUrl({
-        version: 'v4',
-        action: 'read',
-        expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-      });
-  
-      return res.attachment(url);
   }
 
   async create(payload: CreateWorkbookOpenDto, file: any): Promise<void> {
