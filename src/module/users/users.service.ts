@@ -208,7 +208,30 @@ export class UsersService {
     };
   }
 
-  async parol_email(random: string, body: ParolEmailUserDto) {
+  async parol_email(random: string) {
+    const result: any = await this.redis.get(random);
+    const redis = JSON.parse(result);
+
+    if (!redis || redis.random != random) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    const findUser: any = await UserEntity.findOne({
+      where: {
+        email: redis.email,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    
+    return {
+      message: 'Password togri',
+      status: 200,
+    };
+  }
+
+  async parol_create(body: ParolEmailUserDto) {
+    const random = body.code
     const result: any = await this.redis.get(random);
     const redis = JSON.parse(result);
 

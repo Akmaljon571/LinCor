@@ -115,9 +115,19 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async parolEmail(
     @Param('code') param: string,
+  ) {
+    return await this.usersService.parol_email(param);
+  }
+
+  @Post('/parol/create')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async parolCreate(
     @Body() body: ParolEmailUserDto,
   ) {
-    return await this.usersService.parol_email(param, body);
+    return await this.usersService.parol_create(body);
   }
 
   @Get('/statistika')

@@ -23,4 +23,15 @@ export class ParolEmailUserDto {
     required: true,
   })
   newPassword: string;
+
+  @IsString()
+  @Length(0, 10)
+  @ApiProperty({
+    name: 'code',
+    type: 'string',
+    default: '52145',
+    required: true,
+  })
+  @IsNotEmpty()
+  code: string;
 }
