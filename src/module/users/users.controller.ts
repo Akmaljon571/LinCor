@@ -38,6 +38,7 @@ import { googleCloud } from 'src/utils/google-cloud';
 import { PatchUserDto } from './dto/patch.all';
 import { RegistrCreateDto } from './dto/registrCreate';
 import { Request, Response } from 'express';
+import { ReturnType } from 'src/types/types';
 
 @Controller('users')
 @ApiTags('Users')
@@ -115,7 +116,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async parolEmail(
     @Param('code') param: string,
-  ) {
+  ): Promise<ReturnType> {
     return await this.usersService.parol_email(param);
   }
 
@@ -126,7 +127,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async parolCreate(
     @Body() body: ParolEmailUserDto,
-  ) {
+  ): Promise<ReturnType> {
     return await this.usersService.parol_create(body);
   }
 
@@ -153,7 +154,7 @@ export class UsersController {
     description: 'User token',
     required: false,
   })
-  async get(@Headers() header: any) {
+  async get(@Headers() header: any): Promise<any> {
     const userId = await this.veridfyToken.verifyUser(header);
     if (userId) {
       return await this.usersService.get(userId);
@@ -187,7 +188,7 @@ export class UsersController {
   async update(
     @Headers() header: any,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Promise<{ img: string; status: number; }> {
     const userId = await this.veridfyToken.verifyUser(header);
     if (userId) {
       const bool: any = googleCloud(file);
@@ -207,7 +208,7 @@ export class UsersController {
     description: 'User token',
     required: false,
   })
-  async patch(@Headers() header: any, @Body() body: PatchUserDto) {
+  async patch(@Headers() header: any, @Body() body: PatchUserDto): Promise<void> {
     const userId = await this.veridfyToken.verifyUser(header);
     if (userId) {
       return await this.usersService.patch(userId, body);
@@ -227,8 +228,8 @@ export class UsersController {
   async updatePassword(
     @Body() body: ParolEmailUserDto,
     @Headers() header: any,
-  ) {
-    const userId = await this.veridfyToken.verifyUser(header);
+  ): Promise<ReturnType> {
+    const userId: string = await this.veridfyToken.verifyUser(header);
     if (userId) {
       return await this.usersService.updatePassword(body, userId);
     }
@@ -248,7 +249,7 @@ export class UsersController {
     @Param('code') param: string,
     @Headers() header: any,
   ) {
-    const userId = await this.veridfyToken.verifyUser(header);
+    const userId: string = await this.veridfyToken.verifyUser(header);
     if (userId) {
       return await this.usersService.updatePassword_email(param);
     }
