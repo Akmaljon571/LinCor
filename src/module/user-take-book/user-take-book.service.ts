@@ -98,7 +98,7 @@ export class UserTakeBookService {
         'Cache-Control': 'public, max-age=31536000',
       });
   
-      res.download(imageData[0]);
+      res.send(imageData[0]);
 
       await UserTakeWorkbook.createQueryBuilder()
         .update()

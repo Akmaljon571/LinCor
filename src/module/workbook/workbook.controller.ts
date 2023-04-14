@@ -39,7 +39,7 @@ import { HttpException } from '@nestjs/common/exceptions';
 export class WorkbookController {
   constructor(
     private readonly workbookService: WorkbookService,
-    private readonly adminToken: TokenMiddleware,
+    private readonly verifyToken: TokenMiddleware,
   ) {}
 
   @Get('/admin/:course_id')
@@ -55,6 +55,29 @@ export class WorkbookController {
     @Param('course_id') id: string
   ) {
     return await this.workbookService.find(id);
+  }
+
+  @Get('/by_course/:id')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'optional',
+    required: false,
+  })
+  async getUser(
+    @Param('id') course: string,
+    @Headers() header: any
+  ) {
+    if (header?.autharization) {
+      const userId = await this.verifyToken.verifyUser(header);
+      if (userId) {
+        return await this.workbookService.findAll(course, userId);
+      }
+    } else {
+      return await this.workbookService.findAll(course, false);
+    }
   }
 
   @Post('/create')
@@ -89,7 +112,7 @@ export class WorkbookController {
     @Body() body: CreateWorkbookDto,
   ) {
     if (workbook) {
-      const admin = await this.adminToken.verifyAdmin(headers);
+      const admin = await this.verifyToken.verifyAdmin(headers);
       if (admin) {
         const workLink: any = googleCloud(workbook);
         const ext = extname(workLink);
@@ -142,7 +165,7 @@ export class WorkbookController {
     @Body() body: any,
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {
-    const admin = await this.adminToken.verifyAdmin(headers);
+    const admin = await this.verifyToken.verifyAdmin(headers);
     if (admin) {
       if (workbook) {
         const workLink: any = googleCloud(workbook);
@@ -171,7 +194,7 @@ export class WorkbookController {
     required: true,
   })
   async delete(@Param('id') id: string, @Headers() header: any) {
-    const admin = await this.adminToken.verifyAdmin(header);
+    const admin = await this.verifyToken.verifyAdmin(header);
     if (admin) {
       await this.workbookService.deleteWorkBook(id);
     }

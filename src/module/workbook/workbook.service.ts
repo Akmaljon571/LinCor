@@ -4,6 +4,8 @@ import { Workbook } from 'src/entities/workbook.entity';
 import { UpdateWorkbookDto } from './dto/update-workbook.dto';
 import { CourseEntity } from 'src/entities/course.entity';
 import { HttpException } from '@nestjs/common';
+import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
+import { extname } from 'path';
 
 @Injectable()
 export class WorkbookService {
@@ -26,6 +28,100 @@ export class WorkbookService {
     }).catch(() => {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     });
+  }
+
+  async findAll(course: string, header: any) {
+    const findCourse: any = await CourseEntity.findOneBy({
+      course_id: course,
+    }).catch(() => {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    });
+
+    if (!findCourse) {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const allWorkbook: any[] = await Workbook.find({
+      where: {
+        workbook_course: findCourse,
+      },
+      order: {
+        workbook_sequence: 'ASC',
+      },
+    }).catch((e) => e);
+
+    const newObj = [...allWorkbook];
+
+    if (header) {
+      const active: any = await CoursesOpenUsers.findOne({
+        where: {
+          course_id: findCourse.course_id,
+          user_id: header,
+        },
+      }).catch(() => {
+        throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+      });
+      if (active) {
+        const attheMoment: number = new Date().getTime();
+        const dataByCourse = active.create_data.getTime();
+        if (attheMoment - dataByCourse <= 15552000000) {
+          for (let i = 0; i < newObj.length; i++) {
+            newObj[i].workbook_active = true;
+          }
+          return newObj;
+        } else {
+          await CoursesOpenUsers.createQueryBuilder()
+            .delete()
+            .from(CoursesOpenUsers)
+            .where({ cou_id: active.cou_id })
+            .execute();
+
+          for (let i = 0; i < newObj.length; i++) {
+            newObj[i].workbook_active = true;
+            if (newObj[i].workbook_sequence > 2) {
+              newObj[i].workbook_active = false;
+              const workbook = extname(newObj[i].workbook_link);
+              newObj[i].workbook_link =
+                'adsfdhgk' +
+                allWorkbook[i].workbook_link +
+                'adsfh'.split('').reverse().join('.')[0] +
+                workbook;
+            }
+          }
+
+          return newObj;
+        }
+      } else {
+        for (let i = 0; i < newObj.length; i++) {
+          newObj[i].workbook_active = true;
+          if (newObj[i].workbook_sequence > 2) {
+            newObj[i].workbook_active = false;
+            const workbook = extname(newObj[i].workbook_link);
+            newObj[i].workbook_link =
+              'adsfdhgk' +
+              allWorkbook[i].workbook_link +
+              'adsfh'.split('').reverse().join('.')[0] +
+              workbook;
+          }
+        }
+
+        return newObj;
+      }
+    } else {
+      for (let i = 0; i < newObj.length; i++) {
+        newObj[i].workbook_active = true;
+
+        if (newObj[i].workbook_sequence > 2) {
+          newObj[i].workbook_active = false;
+          const workbookname = extname(newObj[i].workbook_link);
+          newObj[i].workbook_link =
+            'adsfdhgk' +
+            allWorkbook[i].workbook_link +
+            'adsfh'.split('').reverse().join('.')[0] +
+            workbookname;
+        }
+      }
+    }
   }
 
   async createWorkBook(

@@ -47,7 +47,7 @@ export class VideoService {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
 
-    const allVideos: any = await Videos.find({
+    const allVideos: any[] = await Videos.find({
       where: {
         videos_course: findCourse,
       },
@@ -89,7 +89,7 @@ export class VideoService {
               const videoname = extname(newObj[i].video_link);
               newObj[i].video_link =
                 'adsfdhgk' +
-                allVideos.video_link +
+                allVideos[i].video_link +
                 'adsfh'.split('').reverse().join('.')[0] +
                 videoname;
             }
@@ -105,7 +105,7 @@ export class VideoService {
             const videoname = extname(newObj[i].video_link);
             newObj[i].video_link =
               'adsfdhgk' +
-              allVideos.video_link +
+              allVideos[i].video_link +
               'adsfh'.split('').reverse().join('.')[0] +
               videoname;
           }
@@ -122,7 +122,7 @@ export class VideoService {
           const videoname = extname(newObj[i].video_link);
           newObj[i].video_link =
             'adsfdhgk' +
-            allVideos.video_link +
+            allVideos[i].video_link +
             'adsfh'.split('').reverse().join('.')[0] +
             videoname;
         }
