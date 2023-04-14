@@ -5,10 +5,15 @@ const senMail = async (adres: string, content: string) => {
   try {
     const transport = nodemailer.createTransport({
       service: 'gmail',
+      port: 587,
+      secure: true,
       auth: {
         user: 'lincorteamnt@gmail.com',
         pass: 'xbewqqnfarwklaaj',
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
     await transport.sendMail({

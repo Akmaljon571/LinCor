@@ -537,7 +537,7 @@ export class UsersService {
   async admin_login(body: LoginUserDto) {
     const randomSon = random();
     if (
-      body.email !== 'ahmadjonovakmal079@gmail.com' &&
+      body.email !== 'ahmadjonovakmal079@gmail.com' ||
       body.password !== 'adminprodvd2427'
     ) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);

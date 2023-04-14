@@ -310,7 +310,6 @@ export class UsersController {
   }
 
   @Post('/admin/login')
-  @ApiBadRequestResponse()
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.OK)
@@ -319,7 +318,6 @@ export class UsersController {
   }
 
   @Get('/admin/login/email/:id')
-  @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
