@@ -58,8 +58,9 @@ export class WorkbookOpenController {
   @Get('/one/:id')
   async one(
     @Param('id') id: string,
+    @Res() res: Response
   ) {
-    return await this.workbookopenService.one(id);
+    return await this.workbookopenService.one(id, res);
   }
 
   @Post('/create')

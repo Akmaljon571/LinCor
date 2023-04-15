@@ -5,7 +5,7 @@ import { CreateWorkbookOpenDto } from './dto/create-workbook_open.dto';
 import { CourseEntity } from 'src/entities/course.entity';
 import { UpdateWorkbookOpenDto } from './dto/update-workbook_open.dto';
 import { Response } from 'express';
-import { File, Storage } from '@google-cloud/storage';
+import { Storage } from '@google-cloud/storage';
 import { join } from 'path';
 
 @Injectable()
@@ -40,12 +40,27 @@ export class WorkbookOpenService {
     });
   }
 
-  async one(id: string) {
-    return await WorkbookOpen.findOne({
+  async one(id: string, res: Response) {
+    const workbook = await WorkbookOpen.findOne({
       where: {
         openbook_id: id
       }
     })
+
+    const filename = workbook.openbook_link + '.pdf';
+      const bucketName = 'ishladi';
+      const bucket = this.storage.bucket(bucketName);
+      const file = bucket.file(filename);
+  
+      const imageData: any = await file.download();
+  
+      res.set({
+        'Content-Type': 'image/pdf',
+        'Cache-Control': 'public, max-age=31536000',
+      });
+  
+      res.send(imageData[0]);
+
   }
 
   async create(payload: CreateWorkbookOpenDto, file: any): Promise<void> {

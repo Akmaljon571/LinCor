@@ -94,7 +94,7 @@ export class UserTakeBookService {
       const imageData: any = await file.download();
   
       res.set({
-        'Content-Type': 'image/jpeg',
+        'Content-Type': 'image/pdf',
         'Cache-Control': 'public, max-age=31536000',
       });
   
