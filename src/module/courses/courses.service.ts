@@ -24,6 +24,20 @@ export class CoursesService {
       });
   }
 
+  async filter(id: string) {
+    const course: CourseEntity[] = await CourseEntity.find({
+      order: {
+        course_sequence: 'ASC',
+      },
+    }).catch(() => {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }); 
+
+    const filter = course.filter(e => e.course_id != id)
+
+    return filter
+  }
+
   async findAll() {
     const course: any[] = await CourseEntity.find({
       order: {
