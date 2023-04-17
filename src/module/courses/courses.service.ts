@@ -40,17 +40,12 @@ export class CoursesService {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
 
-    const course1: CourseEntity[] = await CourseEntity.find({
-      relations: {
-        course_videos: true,
-      },
-    }).catch(() => {
-      throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
-    });
-
     const course: CourseEntity[] = await CourseEntity.find({
       order: {
         course_sequence: 'ASC',
+      },
+      relations: {
+        course_videos: true,
       },
     }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -61,18 +56,20 @@ export class CoursesService {
         (e) => e.course_id != id && findCourse.course_sequence > 3,
       );
       for (let i = 0; i < filter.length; i++) {
-        filter[i].videos_count = course1[i].course_videos.length;
+        filter[i].videos_count = course[i].course_videos.length;
       }
 
+      delete filter.course_videos;
       return filter;
     } else {
       const filter: any = course.filter(
         (e) => e.course_id != id && findCourse.course_sequence <= 3,
       );
       for (let i = 0; i < filter.length; i++) {
-        filter[i].videos_count = course1[i].course_videos.length;
+        filter[i].videos_count = course[i].course_videos.length;
       }
 
+      delete filter.course_videos;
       return filter;
     }
   }
