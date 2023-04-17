@@ -578,7 +578,7 @@ export class UsersService {
       },
     }).catch(() => []);
     if (!findUser) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Admin Not Found', HttpStatus.BAD_REQUEST);
     }
 
     const token = jwt.sign({
