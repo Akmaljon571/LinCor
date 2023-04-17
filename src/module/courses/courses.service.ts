@@ -77,6 +77,10 @@ export class CoursesService {
       throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
     });
 
+    if (course) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
     return course;
   }
 
