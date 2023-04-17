@@ -25,12 +25,24 @@ export class CoursesService {
   }
 
   async filter(id: string) {
-    const course1: CourseEntity[] = await CourseEntity.find({
+    const findCourse: CourseEntity = await CourseEntity.findOne({
       relations: {
         course_videos: true,
       },
       where: {
         course_id: id,
+      },
+    }).catch(() => {
+      throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
+    });
+
+    if (!findCourse) {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const course1: CourseEntity[] = await CourseEntity.find({
+      relations: {
+        course_videos: true,
       },
     }).catch(() => {
       throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
@@ -44,13 +56,25 @@ export class CoursesService {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
 
-    const filter: any = course.filter((e) => e.course_id != id);
+    if (findCourse.course_sequence > 3) {
+      const filter: any = course.filter(
+        (e) => e.course_id != id && findCourse.course_sequence > 3,
+      );
+      for (let i = 0; i < filter.length; i++) {
+        filter[i].videos_count = course1[i].course_videos.length;
+      }
 
-    for (let i = 0; i < filter.length; i++) {
-      filter[i].videos_count = course1[i].course_videos.length;
+      return filter;
+    } else {
+      const filter: any = course.filter(
+        (e) => e.course_id != id && findCourse.course_sequence <= 3,
+      );
+      for (let i = 0; i < filter.length; i++) {
+        filter[i].videos_count = course1[i].course_videos.length;
+      }
+
+      return filter;
     }
-
-    return filter;
   }
 
   async findAll() {
