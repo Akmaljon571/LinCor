@@ -25,6 +25,17 @@ export class CoursesService {
   }
 
   async filter(id: string) {
+    const course1: CourseEntity[] = await CourseEntity.find({
+      relations: {
+        course_videos: true,
+      },
+      where: {
+        course_id: id,
+      },
+    }).catch(() => {
+      throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
+    });
+
     const course: CourseEntity[] = await CourseEntity.find({
       order: {
         course_sequence: 'ASC',
@@ -33,7 +44,11 @@ export class CoursesService {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
 
-    const filter = course.filter((e) => e.course_id != id);
+    const filter: any = course.filter((e) => e.course_id != id);
+
+    for (let i = 0; i < filter.length; i++) {
+      filter[i].videos_count = course1[i].course_videos.length;
+    }
 
     return filter;
   }
