@@ -17,8 +17,6 @@ import {
   Put,
   Patch,
   Delete,
-  Req,
-  Res,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -37,7 +35,6 @@ import { TokenMiddleware } from 'src/middleware/middleware.service';
 import { googleCloud } from 'src/utils/google-cloud';
 import { PatchUserDto } from './dto/patch.all';
 import { RegistrCreateDto } from './dto/registrCreate';
-import { Request, Response } from 'express';
 import { ReturnType } from 'src/types/types';
 
 @Controller('users')
@@ -73,10 +70,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @ApiUnprocessableEntityResponse()
   @HttpCode(HttpStatus.OK)
-  async registrCreate(
-    @Body() body: RegistrCreateDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async registrCreate(@Body() body: RegistrCreateDto) {
     return await this.usersService.registrCreate(body);
   }
 

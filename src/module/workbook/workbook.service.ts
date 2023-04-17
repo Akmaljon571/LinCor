@@ -152,7 +152,7 @@ export class WorkbookService {
           workbook_sequence: 'ASC',
         },
       },
-    }).catch((e) => {
+    }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
 

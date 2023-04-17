@@ -16,7 +16,6 @@ import { ParolUserDto } from './dto/parol';
 import { PatchUserDto } from './dto/patch.all';
 import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
 import { fn } from 'src/utils/time_left';
-import { Response } from 'express';
 import { trim } from 'src/utils/trim';
 import { plus } from 'src/utils/plus';
 
