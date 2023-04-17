@@ -66,10 +66,18 @@ export class CoursesService {
   }
 
   async findOne(id: string) {
-    const course: any = await CourseEntity.findOne({
-      order: {
-        course_sequence: 'ASC',
+    const course1: CourseEntity = await CourseEntity.findOne({
+      relations: {
+        course_videos: true,
       },
+      where: {
+        course_id: id,
+      },
+    }).catch(() => {
+      throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
+    });
+
+    const course: any = await CourseEntity.findOne({
       where: {
         course_id: id,
       },
@@ -80,6 +88,8 @@ export class CoursesService {
     if (course) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
+
+    course.video_count = course1?.course_videos?.length;
 
     return course;
   }
