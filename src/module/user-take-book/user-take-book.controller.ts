@@ -21,7 +21,11 @@ export class UserTakeBookController {
     description: 'User token',
     required: true,
   })
-  async findOne(@Headers() headers: any, @Param('id') param: string, @Res() res: Response) {
+  async findOne(
+    @Headers() headers: any,
+    @Param('id') param: string,
+    @Res() res: Response,
+  ) {
     const userId = await this.userToken.verifyUser(headers);
     if (userId) {
       return await this.userTakeBookService.findOne(userId, param, res);

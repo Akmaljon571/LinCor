@@ -31,11 +31,11 @@ export class CoursesService {
       },
     }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-    }); 
+    });
 
-    const filter = course.filter(e => e.course_id != id)
+    const filter = course.filter((e) => e.course_id != id);
 
-    return filter
+    return filter;
   }
 
   async findAll() {
@@ -71,8 +71,8 @@ export class CoursesService {
         course_sequence: 'ASC',
       },
       where: {
-        course_id: id
-      }
+        course_id: id,
+      },
     }).catch(() => {
       throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
     });

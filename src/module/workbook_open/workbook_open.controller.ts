@@ -49,17 +49,12 @@ export class WorkbookOpenController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  async get(
-    @Param('course_id') id: string
-  ) {
+  async get(@Param('course_id') id: string) {
     return await this.workbookopenService.get(id);
   }
 
   @Get('/one/:id')
-  async one(
-    @Param('id') id: string,
-    @Res() res: Response
-  ) {
+  async one(@Param('id') id: string, @Res() res: Response) {
     return await this.workbookopenService.one(id, res);
   }
 

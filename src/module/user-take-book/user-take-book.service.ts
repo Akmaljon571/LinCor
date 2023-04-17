@@ -90,14 +90,14 @@ export class UserTakeBookService {
       const bucketName = 'ishladi';
       const bucket = this.storage.bucket(bucketName);
       const file = bucket.file(filename);
-  
+
       const imageData: any = await file.download();
-  
+
       res.set({
         'Content-Type': 'image/pdf',
         'Cache-Control': 'public, max-age=31536000',
       });
-  
+
       res.send(imageData[0]);
 
       await UserTakeWorkbook.createQueryBuilder()

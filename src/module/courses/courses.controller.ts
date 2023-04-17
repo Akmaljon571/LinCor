@@ -118,9 +118,7 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  async findOne(
-    @Param('id') id: string
-  ) {
+  async findOne(@Param('id') id: string) {
     return await this.coursesService.findOne(id);
   }
 
@@ -129,9 +127,7 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  async filter(
-    @Param('id') id: string
-  ) {
+  async filter(@Param('id') id: string) {
     return await this.coursesService.filter(id);
   }
 

@@ -35,7 +35,7 @@ export class UsersService {
         email: body.email,
       },
     }).catch(() => []);
-    console.log(findUser)
+    console.log(findUser);
     if (findUser) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
@@ -223,7 +223,7 @@ export class UsersService {
     if (!findUser) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-    
+
     return {
       message: 'Password togri',
       status: 200,
@@ -231,7 +231,7 @@ export class UsersService {
   }
 
   async parol_create(body: ParolEmailUserDto) {
-    const random = body.code
+    const random = body.code;
     const result: any = await this.redis.get(random);
     const redis = JSON.parse(result);
 
@@ -318,8 +318,8 @@ export class UsersService {
       relations: {
         open_course: {
           course_id: {
-            course_videos: true
-          }
+            course_videos: true,
+          },
         },
         take_workbook: true,
         watch_video: true,
@@ -338,10 +338,14 @@ export class UsersService {
       const newObj = fn(utilsDate(findUser.open_course[i].create_data), today);
       if (newObj.finish) {
         findUser.expired_courses.push(findUser.open_course[i]);
-        findUser.expired_courses[i].course = findUser.expired_courses[i].course_id.course_id;
-        findUser.expired_courses[i].course_title = findUser.expired_courses[i].course_id.course_title;
-        findUser.expired_courses[i].video_count = findUser.expired_courses[i].course_id.course_videos.length;
-        findUser.expired_courses[i].course_bgcolor = findUser.expired_courses[i].course_id.course_bgc;
+        findUser.expired_courses[i].course =
+          findUser.expired_courses[i].course_id.course_id;
+        findUser.expired_courses[i].course_title =
+          findUser.expired_courses[i].course_id.course_title;
+        findUser.expired_courses[i].video_count =
+          findUser.expired_courses[i].course_id.course_videos.length;
+        findUser.expired_courses[i].course_bgcolor =
+          findUser.expired_courses[i].course_id.course_bgc;
         findUser.expired_courses[i].bought = utilsDate(
           findUser.open_course[i].create_data,
         );
@@ -354,10 +358,14 @@ export class UsersService {
         delete findUser.expired_courses[i].cou_id;
       } else {
         findUser.bought_courses.push(findUser.open_course[i]);
-        findUser.bought_courses[i].course = findUser.bought_courses[i].course_id.course_id;
-        findUser.bought_courses[i].course_title = findUser.bought_courses[i].course_id.course_title;
-        findUser.bought_courses[i].video_count = findUser.bought_courses[i].course_id.course_videos.length;
-        findUser.bought_courses[i].course_bgcolor = findUser.bought_courses[i].course_id.course_bgc;
+        findUser.bought_courses[i].course =
+          findUser.bought_courses[i].course_id.course_id;
+        findUser.bought_courses[i].course_title =
+          findUser.bought_courses[i].course_id.course_title;
+        findUser.bought_courses[i].video_count =
+          findUser.bought_courses[i].course_id.course_videos.length;
+        findUser.bought_courses[i].course_bgcolor =
+          findUser.bought_courses[i].course_id.course_bgc;
         findUser.bought_courses[i].bought = utilsDate(
           findUser.open_course[i].create_data,
         );
@@ -397,11 +405,11 @@ export class UsersService {
         user_id: userId,
       })
       .execute();
-    
+
     return {
       img,
-      status: 200
-    }
+      status: 200,
+    };
   }
 
   async patch(userId: string, body: PatchUserDto) {
@@ -424,8 +432,6 @@ export class UsersService {
         user_id: userId,
       })
       .execute();
-
-    
   }
 
   async restart(userId: string) {
@@ -441,7 +447,7 @@ export class UsersService {
     await UserEntity.createQueryBuilder()
       .update()
       .set({
-        active: true
+        active: true,
       })
       .where({
         user_id: userId,

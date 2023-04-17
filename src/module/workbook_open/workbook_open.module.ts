@@ -11,4 +11,4 @@ import { Repository } from 'typeorm';
   providers: [WorkbookOpenService, TokenMiddleware, Repository],
   imports: [TypeOrmModule.forFeature([WorkbookOpen])],
 })
-export class WorkbookOpenModule { }
+export class WorkbookOpenModule {}

@@ -51,9 +51,7 @@ export class WorkbookController {
     description: 'Admin Token',
     required: true,
   })
-  async get(
-    @Param('course_id') id: string
-  ) {
+  async get(@Param('course_id') id: string) {
     return await this.workbookService.find(id);
   }
 
@@ -66,10 +64,7 @@ export class WorkbookController {
     description: 'optional',
     required: false,
   })
-  async getUser(
-    @Param('id') course: string,
-    @Headers() header: any
-  ) {
+  async getUser(@Param('id') course: string, @Headers() header: any) {
     if (header?.autharization) {
       const userId = await this.verifyToken.verifyUser(header);
       if (userId) {

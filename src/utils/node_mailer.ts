@@ -12,8 +12,8 @@ const senMail = async (adres: string, content: string) => {
         pass: 'xbewqqnfarwklaaj',
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
 
     await transport.sendMail({

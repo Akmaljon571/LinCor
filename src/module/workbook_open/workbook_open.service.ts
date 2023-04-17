@@ -10,9 +10,7 @@ import { join } from 'path';
 
 @Injectable()
 export class WorkbookOpenService {
-  constructor(
-    readonly workbookopenRepo: Repository<WorkbookOpen>,
-  ) {}
+  constructor(readonly workbookopenRepo: Repository<WorkbookOpen>) {}
 
   private storage = new Storage({
     projectId: 'peerless-watch-382417',
@@ -21,18 +19,18 @@ export class WorkbookOpenService {
 
   async get(id: any): Promise<any> {
     if (id == 'false' || id == 'undefined') {
-      return []
+      return [];
     }
     return await CourseEntity.findOne({
       where: {
         course_id: id,
       },
       relations: {
-        workbook_open: true
+        workbook_open: true,
       },
       order: {
         workbook_open: {
-          openbook_sequence: 'ASC'
+          openbook_sequence: 'ASC',
         },
       },
     }).catch(() => {
@@ -43,24 +41,23 @@ export class WorkbookOpenService {
   async one(id: string, res: Response) {
     const workbook = await WorkbookOpen.findOne({
       where: {
-        openbook_id: id
-      }
-    })
+        openbook_id: id,
+      },
+    });
 
     const filename = workbook.openbook_link + '.pdf';
-      const bucketName = 'ishladi';
-      const bucket = this.storage.bucket(bucketName);
-      const file = bucket.file(filename);
-  
-      const imageData: any = await file.download();
-  
-      res.set({
-        'Content-Type': 'image/pdf',
-        'Cache-Control': 'public, max-age=31536000',
-      });
-  
-      res.send(imageData[0]);
+    const bucketName = 'ishladi';
+    const bucket = this.storage.bucket(bucketName);
+    const file = bucket.file(filename);
 
+    const imageData: any = await file.download();
+
+    res.set({
+      'Content-Type': 'image/pdf',
+      'Cache-Control': 'public, max-age=31536000',
+    });
+
+    res.send(imageData[0]);
   }
 
   async create(payload: CreateWorkbookOpenDto, file: any): Promise<void> {
@@ -78,17 +75,16 @@ export class WorkbookOpenService {
         course_id: findCourse.course_id,
       },
       relations: {
-        workbook_open: true
+        workbook_open: true,
       },
       order: {
         workbook_open: {
-          openbook_sequence: 'ASC'
+          openbook_sequence: 'ASC',
         },
       },
-    })
-      .catch((e) => {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-      });
+    }).catch((e) => {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    });
 
     for (let i = 0; i < findWorkbook.workbook_open.length; i++) {
       if (findWorkbook.workbook_open[i].openbook_sequence == payload.sequence) {
@@ -138,17 +134,16 @@ export class WorkbookOpenService {
         course_id: findCourse.course_id,
       },
       relations: {
-        workbook_open: true
+        workbook_open: true,
       },
       order: {
         workbook_open: {
-          openbook_sequence: 'ASC'
+          openbook_sequence: 'ASC',
         },
       },
-    })
-      .catch((e) => {
-        throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
-      });
+    }).catch((e) => {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    });
 
     for (let i = 0; i < find.workbook_open.length; i++) {
       if (find.workbook_open[i].openbook_sequence == payload.sequence) {

@@ -74,10 +74,7 @@ export class CoursesOpenController {
     description: 'Admin token',
     required: true,
   })
-  async get(
-    @Param('id') id: string,
-    @Headers() header: any,
-  ) {
+  async get(@Param('id') id: string, @Headers() header: any) {
     const adminId = await this.adminToken.verifyAdmin(header);
     if (adminId) {
       return await this.coursesOpenService.get(id);
@@ -93,10 +90,7 @@ export class CoursesOpenController {
     description: 'Admin token',
     required: true,
   })
-  async deleted(
-    @Body() body: CreateCourseOpenDto,
-    @Headers() header: any,
-  ) {
+  async deleted(@Body() body: CreateCourseOpenDto, @Headers() header: any) {
     const adminId = await this.adminToken.verifyAdmin(header);
     if (adminId) {
       return await this.coursesOpenService.deleted(body.userId, body.courseId);

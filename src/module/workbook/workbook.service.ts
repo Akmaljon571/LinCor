@@ -11,18 +11,18 @@ import { extname } from 'path';
 export class WorkbookService {
   async find(id: string) {
     if (id == 'false' || id == 'undefined') {
-      return []
+      return [];
     }
     return await CourseEntity.findOne({
       where: {
         course_id: id,
       },
       relations: {
-        workbook: true
+        workbook: true,
       },
       order: {
         workbook: {
-          workbook_sequence: 'ASC'
+          workbook_sequence: 'ASC',
         },
       },
     }).catch(() => {
@@ -145,18 +145,17 @@ export class WorkbookService {
         course_id: course.course_id,
       },
       relations: {
-        workbook: true
+        workbook: true,
       },
       order: {
         workbook: {
-          workbook_sequence: 'ASC'
+          workbook_sequence: 'ASC',
         },
       },
-    })
-    .catch((e) => {
+    }).catch((e) => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
-    
+
     for (let i = 0; i < findWorkbook?.workbook?.length; i++) {
       if (findWorkbook.workbook[i].workbook_sequence == workbookbody.sequence) {
         throw new HttpException('Book Already added', HttpStatus.BAD_REQUEST);
@@ -196,18 +195,17 @@ export class WorkbookService {
 
     const findWorkbook: any = await CourseEntity.findOne({
       where: {
-        course_id: workbook.workbook_course
+        course_id: workbook.workbook_course,
       },
       relations: {
-        workbook: true
+        workbook: true,
       },
       order: {
         workbook: {
-          workbook_sequence: 'ASC'
+          workbook_sequence: 'ASC',
         },
       },
-    })
-    .catch(() => {
+    }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
     for (let i = 0; i < findWorkbook?.workbook?.length; i++) {

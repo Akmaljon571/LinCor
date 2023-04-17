@@ -46,7 +46,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly veridfyToken: TokenMiddleware,
-  ) { }
+  ) {}
 
   @Post('/registr')
   @ApiBadRequestResponse()
@@ -63,9 +63,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @ApiUnprocessableEntityResponse()
   @HttpCode(HttpStatus.OK)
-  async registrEmail(
-    @Param('code') param: string,
-  ) {
+  async registrEmail(@Param('code') param: string) {
     return await this.usersService.registr_email(param);
   }
 
@@ -114,9 +112,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async parolEmail(
-    @Param('code') param: string,
-  ): Promise<ReturnType> {
+  async parolEmail(@Param('code') param: string): Promise<ReturnType> {
     return await this.usersService.parol_email(param);
   }
 
@@ -125,9 +121,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async parolCreate(
-    @Body() body: ParolEmailUserDto,
-  ): Promise<ReturnType> {
+  async parolCreate(@Body() body: ParolEmailUserDto): Promise<ReturnType> {
     return await this.usersService.parol_create(body);
   }
 
@@ -188,7 +182,7 @@ export class UsersController {
   async update(
     @Headers() header: any,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<{ img: string; status: number; }> {
+  ): Promise<{ img: string; status: number }> {
     const userId = await this.veridfyToken.verifyUser(header);
     if (userId) {
       const bool: any = googleCloud(file);
@@ -208,7 +202,10 @@ export class UsersController {
     description: 'User token',
     required: false,
   })
-  async patch(@Headers() header: any, @Body() body: PatchUserDto): Promise<void> {
+  async patch(
+    @Headers() header: any,
+    @Body() body: PatchUserDto,
+  ): Promise<void> {
     const userId = await this.veridfyToken.verifyUser(header);
     if (userId) {
       return await this.usersService.patch(userId, body);
@@ -265,10 +262,7 @@ export class UsersController {
     description: 'Admin token',
     required: true,
   })
-  async restart(
-    @Param('id') param: string,
-    @Headers() header: any,
-  ) {
+  async restart(@Param('id') param: string, @Headers() header: any) {
     const userId = await this.veridfyToken.verifyUser(header);
     if (userId) {
       return await this.usersService.restart(param);

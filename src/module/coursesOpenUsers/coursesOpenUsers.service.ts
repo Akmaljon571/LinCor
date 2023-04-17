@@ -96,22 +96,22 @@ export class CoursesOpenService {
 
   async get(id: any) {
     if (id == 'false' || id == 'undefined') {
-      return []
+      return [];
     }
     const all = await CoursesOpenUsers.find({
       relations: {
-        user_id: true
+        user_id: true,
       },
       where: {
-        course_id: id
-      }
-    })
+        course_id: id,
+      },
+    });
 
-    const users = []
+    const users = [];
     for (let i = 0; i < all.length; i++) {
-      users.push(all[i].user_id)
+      users.push(all[i].user_id);
     }
-    return users
+    return users;
   }
 
   async deleted(userId: string, courseId: string) {
@@ -159,9 +159,9 @@ export class CoursesOpenService {
       .catch(() => {
         throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
       });
-    return  {
-        messgae: 'The user has purchased a course',
-        status: 200,
-    }
+    return {
+      messgae: 'The user has purchased a course',
+      status: 200,
+    };
   }
 }
