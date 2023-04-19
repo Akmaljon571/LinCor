@@ -16,12 +16,12 @@ export class TokenMiddleware {
     if (!admin?.email && !admin?.password) {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
-    // if (
-    //   admin?.email !== 'ahmadjonovakmal079@gmail.com' &&
-    //   admin?.password !== 'adminprodvd2427'
-    // ) {
-    //   throw new HttpException('Siz Admin emasiz', HttpStatus.BAD_REQUEST);
-    // }
+    if (
+      admin?.email !== 'shakhboz2427@gmail.com' &&
+      admin?.password !== 'adminprodvd2427'
+    ) {
+      throw new HttpException('Siz Admin emasiz', HttpStatus.BAD_REQUEST);
+    }
     return admin?.id;
   }
 
