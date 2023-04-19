@@ -44,6 +44,9 @@ export class CoursesService {
       order: {
         course_sequence: 'ASC',
       },
+      relations: {
+        course_videos: true,
+      },
     }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
@@ -51,9 +54,6 @@ export class CoursesService {
     const course: CourseEntity[] = await CourseEntity.find({
       order: {
         course_sequence: 'ASC',
-      },
-      relations: {
-        course_videos: true,
       },
     }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
