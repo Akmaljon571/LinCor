@@ -18,6 +18,7 @@ import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
 import { fn } from 'src/utils/time_left';
 import { trim } from 'src/utils/trim';
 import { plus } from 'src/utils/plus';
+import { ParolUpdateDto } from './dto/update_parol';
 
 @Injectable()
 export class UsersService {
@@ -454,7 +455,7 @@ export class UsersService {
       .execute();
   }
 
-  async updatePassword(body: ParolEmailUserDto, id: string) {
+  async updatePassword(body: ParolUpdateDto, id: string) {
     if (body.password == body.newPassword) {
       const randomSon = random();
       const findUser = await UserEntity.findOne({

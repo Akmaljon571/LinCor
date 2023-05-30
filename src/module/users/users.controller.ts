@@ -36,6 +36,7 @@ import { googleCloud } from 'src/utils/google-cloud';
 import { PatchUserDto } from './dto/patch.all';
 import { RegistrCreateDto } from './dto/registrCreate';
 import { ReturnType } from 'src/types/types';
+import { ParolUpdateDto } from './dto/update_parol';
 
 @Controller('users')
 @ApiTags('Users')
@@ -217,7 +218,7 @@ export class UsersController {
     required: true,
   })
   async updatePassword(
-    @Body() body: ParolEmailUserDto,
+    @Body() body: ParolUpdateDto,
     @Headers() header: any,
   ): Promise<ReturnType> {
     const userId: string = await this.veridfyToken.verifyUser(header);

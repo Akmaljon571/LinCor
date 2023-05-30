@@ -4,11 +4,12 @@ import { WorkbookOpenController } from './workbook_open.controller';
 import { TokenMiddleware } from 'src/middleware/middleware.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WorkbookOpen } from 'src/entities/workbook_open.entity';
+import { HttpModule } from '@nestjs/axios';
 import { Repository } from 'typeorm';
 
 @Module({
   controllers: [WorkbookOpenController],
   providers: [WorkbookOpenService, TokenMiddleware, Repository],
-  imports: [TypeOrmModule.forFeature([WorkbookOpen])],
+  imports: [TypeOrmModule.forFeature([WorkbookOpen]), HttpModule],
 })
 export class WorkbookOpenModule {}

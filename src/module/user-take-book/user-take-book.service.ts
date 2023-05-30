@@ -3,17 +3,13 @@ import { CoursesOpenUsers } from './../../entities/course_open_users.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CourseEntity } from 'src/entities/course.entity';
 import { UserEntity } from 'src/entities/user.entity';
+import { HttpService } from '@nestjs/axios';
 import { UserTakeWorkbook } from 'src/entities/user_take_workbook.entity';
-import { Storage } from '@google-cloud/storage';
-import { join } from 'path';
 import { Response } from 'express';
 
 @Injectable()
 export class UserTakeBookService {
-  private storage = new Storage({
-    projectId: 'peerless-watch-382417',
-    keyFilename: join(process.cwd(), 'src', 'utils/key.json'),
-  });
+  constructor(private readonly httpService: HttpService) {}
 
   async findOne(user_id: string, workbook_id: string, res: Response) {
     const workbook: any = await Workbook.findOne({
@@ -86,19 +82,17 @@ export class UserTakeBookService {
       );
     }
     if (byWorkbook.utw_active) {
-      const filename = workbook.workbook_link + '.pdf';
-      const bucketName = 'ishladi';
-      const bucket = this.storage.bucket(bucketName);
-      const file = bucket.file(filename);
+      const url =
+        'https://storage.googleapis.com/ishladi/' + workbook.workbook_link;
+      const response = await this.httpService
+        .get(url, { responseType: 'arraybuffer' })
+        .toPromise();
 
-      const imageData: any = await file.download();
-
-      res.set({
-        'Content-Type': 'image/pdf',
-        'Cache-Control': 'public, max-age=31536000',
-      });
-
-      res.send(imageData[0]);
+      const data = Buffer.from(response.data, 'binary');
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Length', data.length);
+      res.setHeader('Content-Disposition', 'attachment; filename=name.pdf');
+      res.end(data);
 
       await UserTakeWorkbook.createQueryBuilder()
         .update()

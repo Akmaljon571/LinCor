@@ -5,17 +5,14 @@ import { CreateWorkbookOpenDto } from './dto/create-workbook_open.dto';
 import { CourseEntity } from 'src/entities/course.entity';
 import { UpdateWorkbookOpenDto } from './dto/update-workbook_open.dto';
 import { Response } from 'express';
-import { Storage } from '@google-cloud/storage';
-import { join } from 'path';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class WorkbookOpenService {
-  constructor(readonly workbookopenRepo: Repository<WorkbookOpen>) {}
-
-  private storage = new Storage({
-    projectId: 'peerless-watch-382417',
-    keyFilename: join(process.cwd(), 'src', 'utils', '/key.json'),
-  });
+  constructor(
+    readonly workbookopenRepo: Repository<WorkbookOpen>,
+    private readonly httpService: HttpService,
+  ) {}
 
   async get(id: any): Promise<any> {
     if (id == 'false' || id == 'undefined') {
@@ -39,25 +36,27 @@ export class WorkbookOpenService {
   }
 
   async one(id: string, res: Response) {
-    const workbook = await WorkbookOpen.findOne({
-      where: {
-        openbook_id: id,
-      },
-    });
+    try {
+      const workbook = await WorkbookOpen.findOne({
+        where: {
+          openbook_id: id,
+        },
+      });
 
-    const filename = workbook.openbook_link + '.pdf';
-    const bucketName = 'ishladi';
-    const bucket = this.storage.bucket(bucketName);
-    const file = bucket.file(filename);
+      const url =
+        'https://storage.googleapis.com/ishladi/' + workbook.openbook_link;
+      const response = await this.httpService
+        .get(url, { responseType: 'arraybuffer' })
+        .toPromise();
 
-    const imageData: any = await file.download();
-
-    res.set({
-      'Content-Type': 'image/pdf',
-      'Cache-Control': 'public, max-age=31536000',
-    });
-
-    res.send(imageData[0]);
+      const data = Buffer.from(response.data, 'binary');
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Length', data.length);
+      res.setHeader('Content-Disposition', 'attachment; filename=name.pdf');
+      res.end(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async create(payload: CreateWorkbookOpenDto, file: any): Promise<void> {
@@ -82,7 +81,7 @@ export class WorkbookOpenService {
           openbook_sequence: 'ASC',
         },
       },
-    }).catch((e) => {
+    }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
 
@@ -141,7 +140,7 @@ export class WorkbookOpenService {
           openbook_sequence: 'ASC',
         },
       },
-    }).catch((e) => {
+    }).catch(() => {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     });
 
